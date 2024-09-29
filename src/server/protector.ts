@@ -1,16 +1,18 @@
 import "server-only";
 
 // Types ----------------------------------------------------------------------------
+import { type Session } from "next-auth";
 import { type Role } from "@prisma/client";
 // Packages -------------------------------------------------------------------------
 import { redirect } from "next/navigation";
 // Lib ------------------------------------------------------------------------------
 import { getServerAuthSession } from "./auth";
 // Data -----------------------------------------------------------------------------
-import { PROJECT_ROLE_MAPPER, ROUTE_HOME, ROUTE_LOGIN } from "@/data/_config";
+import { ROUTE_HOME, ROUTE_LOGIN } from "@/data/_config";
 // Other ----------------------------------------------------------------------------
 import { checkRoleAccessLevel } from "@/utils";
-import { Session } from "next-auth";
+
+
 
 //______________________________________________________________________________________
 // ===== Interfaces =====
@@ -30,6 +32,10 @@ interface Options {
 
     /** The redirect location if a user goes to a page the are not authorized to access. */
     redirectUnauthorized?: string;
+
+    
+    exactMatch?: boolean;
+    inverse?: boolean;
 }
 
 //______________________________________________________________________________________
@@ -51,8 +57,8 @@ const DEFAULT_OPTIONS: Options = {
 export const pageProtector = async (options: Options = {}): Promise<Session> => {
     const { requiredRole, redirectNotLoggedIn, redirectUnauthorized } = { ...DEFAULT_OPTIONS, ...options };
     const session = await getServerAuthSession();
-    if (!session) return redirect(redirectNotLoggedIn || ROUTE_HOME);
-    if (!checkRoleAccessLevel(requiredRole || "ADMIN", session)) return redirect(redirectUnauthorized || ROUTE_HOME);
+    if (!session) return redirect(redirectNotLoggedIn ?? ROUTE_HOME);
+    if (!checkRoleAccessLevel(requiredRole || "ADMIN", session, options)) return redirect(redirectUnauthorized ?? ROUTE_HOME);
     return session;
 };
 
@@ -70,7 +76,7 @@ export const actionProtector = async (
     const { requiredRole } = { ...DEFAULT_OPTIONS, ...options };
     const session = await getServerAuthSession();
     if (!session) return { authorized: false, message: "Forbidden!", session };
-    if (!checkRoleAccessLevel(requiredRole || "ADMIN", session)) {
+    if (!checkRoleAccessLevel(requiredRole || "ADMIN", session, options)) {
         return { authorized: false, message: "Unauthorized!" };
     }
     return { authorized: true, message: "Success!", session };

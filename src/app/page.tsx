@@ -3,7 +3,6 @@
 // Packages -------------------------------------------------------------------------
 import Link from "next/link";
 // Data -----------------------------------------------------------------------------
-import { PROJECT_DESCRIPTION } from "@/data/_config";
 // Other ----------------------------------------------------------------------------
 
 
@@ -16,7 +15,7 @@ export default function Page() {
     //______________________________________________________________________________________
     // ===== Component Return =====
     return (
-        <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#121212] to-[#15162c]">
+        <main className="flex h-[90%] flex-col items-center justify-center">
             <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
                 <h1 className="text-center text-5xl font-extrabold tracking-tight sm:text-[5rem]">
                     Project <span className="neonEffect neText neTextGlow neColorYellow">Kalibar</span>

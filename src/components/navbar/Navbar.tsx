@@ -32,10 +32,10 @@ const filterUnauthorizedNavItems = (navItems?: NavItems, session?: Session | nul
 	if (!navItems) return [];
 
 	// Filter out all items for which the user does not have the required role
-	const filteredNavItems = navItems.filter(item => checkRoleAccessLevel(item?.requiredRole || "UNAUTHORIZED", session));
+	const filteredNavItems = navItems.filter(item => checkRoleAccessLevel(item?.requiredRole ?? "UNAUTHORIZED", session));
 
 	// Iterate over all the nav items and call this function recursively on the super items
-	for (let item of filteredNavItems) {
+	for (const item of filteredNavItems) {
 		if (item.itemType === "superItem") item.subItems = filterUnauthorizedNavItems(item.subItems, session);
 	}
 

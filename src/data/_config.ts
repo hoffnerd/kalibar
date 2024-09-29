@@ -4,6 +4,7 @@ import { type Role } from "@prisma/client";
 import { type NavItems } from "@/interfaces";
 
 
+
 //______________________________________________________________________________________
 // ===== Project Configuration =====
 
@@ -14,7 +15,7 @@ export const PROJECT_DISPLAY_NAME = "Project Kalibar";
 export const PROJECT_DESCRIPTION = "A game developed by the NextGenScripts team.";
 
 /** the user role "rankings" of the project. Higher index, the more power that role has */
-export const PROJECT_ROLE_MAPPER: Array<Role | string> = [ "UNAUTHORIZED", "USER", "TESTER", "ADMIN" ]
+export const PROJECT_ROLE_MAPPER: Array<Role> = [ "UNAUTHORIZED", "USER", "TESTER", "ADMIN" ]
 
 
 

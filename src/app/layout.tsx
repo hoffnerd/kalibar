@@ -33,8 +33,8 @@ export default function RootLayout({
     children,
 }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <html lang="en" className={`${GeistSans.variable}`}>
-            <body>
+        <html lang="en" className={`${GeistSans.variable} neonEffect neScrollBar neColorPurple h-full`}>
+            <body className="bg-gradient-to-b from-[#121212] to-[#15162c] h-full">
                 <Navbar navItems={NAVIGATION_MAIN} authNavItems={NAVIGATION_AUTH}/>
                 {children}
             </body>
