@@ -1,0 +1,192 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* ______________________________________________________________________________________ */
+/* ===== Common - NO Tailwind Layer ===== */
+
+@media (max-width: 652.5px) {
+    .hiddenOnMobile {
+        display: none !important;
+    }
+}
+@media (min-width: 652.5px) and (max-width: 991.5px) {
+    .hiddenOnTablet {
+        display: none !important;
+    }
+}
+@media (min-width: 991.5px) {
+    .hiddenOnDesktop {
+        display: none !important;
+    }
+}
+
+
+
+/* ______________________________________________________________________________________ */
+/* ===== Root - Tailwind Layer: Base ===== */
+
+@layer base {
+    :root {
+        --background: 0 0% 3.9%;
+        --foreground: 0 0% 98%;
+        --card: 0 0% 3.9%;
+        --card-foreground: 0 0% 98%;
+        --popover: 0 0% 3.9%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 0 0% 98%;
+        --primary-foreground: 0 0% 9%;
+        --secondary: 0 0% 14.9%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 0 0% 14.9%;
+        --muted-foreground: 0 0% 63.9%;
+        --accent: 0 0% 14.9%;
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 14.9%;
+        --input: 0 0% 14.9%;
+        --ring: 0 0% 83.1%;
+        --chart-1: 220 70% 50%;
+        --chart-2: 160 60% 45%;
+        --chart-3: 30 80% 55%;
+        --chart-4: 280 65% 60%;
+        --chart-5: 340 75% 55%;
+
+        /* https://codepen.io/argyleink/pen/MWymQGj */
+        --colorNeonPurple: #9461fd;
+        --colorNeonPurpleGlow: #4003e6;
+        --colorNeonBlue: #2dd9fe;
+        --colorNeonBlueGlow: #00a3d5;
+        --colorNeonYellow: #ffdb4e;
+        --colorNeonYellowGlow: #b48505;
+        --colorNeonGreen: #00fe9b;
+        --colorNeonGreenGlow: #02c435;
+        --colorNeonPink: #ff53cd;
+        --colorNeonPinkGlow: #e10361;
+        --colorNeonRed: #ff5161;
+        --colorNeonRedGlow: #d30302;
+        --colorNeonOrange: #ffb24e;
+        --colorNeonOrangeGlow: #b47405;
+        --colorNeonWhite: #fefefe;
+        --colorNeonWhiteGlow: #ffffff;
+    }
+}
+
+/* ______________________________________________________________________________________ */
+/* ===== Common - Tailwind Layer: Base ===== */
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+    .invisibleText {
+        color: rgba(0, 0, 0, 0);
+        text-shadow: unset;
+        /* color: rgba(0,0,0,0) !important;
+        text-shadow: unset !important; */
+    }
+}
+
+/* ______________________________________________________________________________________ */
+/* ===== Neon Effects - Tailwind Layer: Utilities  ===== */
+
+@layer utilities {
+    .neonEffect {
+    }
+
+    .neonEffect.neText {
+        --_colorNeon: var(--colorNeon, --colorNeonWhite);
+        color: var(--_colorNeon);
+    }
+
+    .neonEffect.neTextGlow {
+        --_colorGlow: var(--colorGlow, --colorNeonWhiteGlow);
+        text-shadow: var(--_colorGlow) 1px 0 10px;
+    }
+
+    .neonEffect.neBackground {
+        --_colorNeon: var(--colorNeon, --colorNeonWhite);
+        background-color: var(--_colorNeon);
+    }
+    .neonEffect.neBackgroundHover:hover,
+    .neonEffect.neBackgroundHover:focus {
+        --_colorGlow: var(--colorGlow, --colorNeonWhiteGlow);
+        background-color: var(--_colorGlow);
+    }
+
+    .neonEffect.neBorder {
+        --_colorNeon: var(--colorNeon, --colorNeonWhite);
+        border-color: var(--_colorNeon);
+    }
+
+    .neonEffect.neBorderGlow {
+        --_colorGlow: var(--colorGlow, --colorNeonWhiteGlow);
+        --_glowIntensity: var(--glowIntensity, 20px);
+        box-shadow:
+            0 0 var(--_glowIntensity) var(--_colorGlow),
+            inset 0 0 0px var(--_colorGlow);
+    }
+    .neonEffect.neBorderGlow.glowIntensityLow {
+        --glowIntensity: 10px;
+    }
+
+    .neonEffect.neScrollBar {
+        --_colorNeon: var(--colorNeon, --colorNeonWhite);
+        scrollbar-color: var(--_colorNeon) hsl(var(--background));
+    }
+
+    .neonEffect.neScrollBar::-webkit-scrollbar-thumb {
+        --_colorNeon: var(--colorNeon, --colorNeonWhite);
+        --_colorGlow: var(--colorGlow, --colorNeonWhiteGlow);
+        background-color: var(--_colorNeon);
+        border-radius: 10px;
+        border: 3px solid var(--_colorNeon);
+        box-shadow:
+            0 0 20px var(--_colorGlow),
+            inset 0 0 0px var(--_colorGlow);
+    }
+}
+
+/* ______________________________________________________________________________________ */
+/* ===== Neon Colors - Tailwind Layer: Utilities ===== */
+
+@layer utilities {
+    .neonEffect.neColorPurple {
+        --colorNeon: var(--colorNeonPurple);
+        --colorGlow: var(--colorNeonPurpleGlow);
+    }
+
+    .neonEffect.neColorBlue {
+        --colorNeon: var(--colorNeonBlue);
+        --colorGlow: var(--colorNeonBlueGlow);
+    }
+    .neonEffect.neColorYellow {
+        --colorNeon: var(--colorNeonYellow);
+        --colorGlow: var(--colorNeonYellowGlow);
+    }
+    .neonEffect.neColorGreen {
+        --colorNeon: var(--colorNeonGreen);
+        --colorGlow: var(--colorNeonGreenGlow);
+    }
+    .neonEffect.neColorPink {
+        --colorNeon: var(--colorNeonPink);
+        --colorGlow: var(--colorNeonPinkGlow);
+    }
+    .neonEffect.neColorRed {
+        --colorNeon: var(--colorNeonRed);
+        --colorGlow: var(--colorNeonRedGlow);
+    }
+    .neonEffect.neColorOrange {
+        --colorNeon: var(--colorNeonOrange);
+        --colorGlow: var(--colorNeonOrangeGlow);
+    }
+    .neonEffect.neColorWhite {
+        --colorNeon: var(--colorNeonWhite);
+        --colorGlow: var(--colorNeonWhiteGlow);
+    }
+}
