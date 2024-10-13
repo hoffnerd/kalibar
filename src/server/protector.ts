@@ -38,6 +38,8 @@ interface Options {
     inverse?: boolean;
 }
 
+
+
 //______________________________________________________________________________________
 // ===== True Constants =====
 
@@ -47,6 +49,8 @@ const DEFAULT_OPTIONS: Options = {
     redirectUnauthorized: ROUTE_HOME,
 };
 
+
+
 //______________________________________________________________________________________
 // ===== Functions =====
 
@@ -54,7 +58,7 @@ const DEFAULT_OPTIONS: Options = {
  * Ensures access control based on user roles and authentication status.
  * @param options - optional object that controls how this function should behave.
  */
-export const pageProtector = async (options: Options = {}): Promise<Session> => {
+export const pageProtection = async (options: Options = {}): Promise<Session> => {
     const { requiredRole, redirectNotLoggedIn, redirectUnauthorized } = { ...DEFAULT_OPTIONS, ...options };
     const session = await getServerAuthSession();
     if (!session) return redirect(redirectNotLoggedIn ?? ROUTE_HOME);
@@ -66,18 +70,19 @@ export const pageProtector = async (options: Options = {}): Promise<Session> => 
  * Checks if a user is authorized based on their role and returns a message accordingly.
  * @param options - optional object that controls how this function should behave.
  */
-export const actionProtector = async (
+export const actionProtection = async (
     options: Options = {},
 ): Promise<{
     authorized: boolean;
+    error: boolean;
     message: string;
     session?: Session | null;
 }> => {
     const { requiredRole } = { ...DEFAULT_OPTIONS, ...options };
     const session = await getServerAuthSession();
-    if (!session) return { authorized: false, message: "Forbidden!", session };
+    if (!session) return { authorized: false, error: true, message: "Forbidden!", session };
     if (!checkRoleAccessLevel(requiredRole || "ADMIN", session, options)) {
-        return { authorized: false, message: "Unauthorized!" };
+        return { authorized: false, error: true, message: "Unauthorized!" };
     }
-    return { authorized: true, message: "Success!", session };
+    return { authorized: true, error: false, message: "Success!", session };
 };

@@ -78,6 +78,7 @@ export default async function Navbar({
     return (
         <div className="sticky-top-0 bg-background z-[1010] border-primary border-b-2">
             <MobileNavbar
+                className="hiddenOnDesktop h-20"
                 navItems={allowedNavItems}
                 authNavItems={allowedAuthNavItems}
                 header={header}

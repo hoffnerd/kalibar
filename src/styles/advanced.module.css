@@ -6,6 +6,6 @@
 
 .saveFileButton:hover > div,
 .saveFileButton:focus > div{
-    scale: 0.9;
+    scale: 0.95;
 }
 

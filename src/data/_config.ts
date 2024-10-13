@@ -1,6 +1,6 @@
 
 // Types ----------------------------------------------------------------------------
-import { type Role } from "@prisma/client";
+import { type Role, type SaveFileType } from "@prisma/client";
 import { type NavItems } from "@/interfaces";
 
 
@@ -9,25 +9,31 @@ import { type NavItems } from "@/interfaces";
 // ===== Project Configuration =====
 
 /** the readable name of the project. */
-export const PROJECT_DISPLAY_NAME = "Project Kalibar";
+export const PROJECT_DISPLAY_NAME: string = "Project Kalibar";
 
 /** the description of the project. */
-export const PROJECT_DESCRIPTION = "A game developed by the NextGenScripts team.";
+export const PROJECT_DESCRIPTION: string = "A game developed by the NextGenScripts team.";
 
 /** the user role "rankings" of the project. Higher index, the more power that role has */
 export const PROJECT_ROLE_MAPPER: Array<Role> = [ "UNAUTHORIZED", "USER", "TESTER", "ADMIN" ]
 
+/** The lowest role needed to play the game */
+export const PROJECT_LOWEST_ROLE_FOR_PLAY: Role = "TESTER";
 
+/** Object that lists errors that can occur across the project */
+export const PROJECT_ERRORS = {
+    // e: { key:"e", display:"" },
+    e_unauthorized: { key:"e_unauthorized", display:"Unauthorized!" },
+    e_forbidden: { key:"e_forbidden", display:"Forbidden!" },
+}
 
 
 //______________________________________________________________________________________
 // ===== Route Configuration =====
 
-/** the route that the home page is on. */
-export const ROUTE_HOME = "/";
+export const ROUTE_HOME: string = "/";
 
-/** the route that the login page is on. */
-export const ROUTE_LOGIN = "/api/auth/signin";
+export const ROUTE_LOGIN: string = "/api/auth/signin";
 
 
 
@@ -57,4 +63,23 @@ export const NAVIGATION_AUTH: NavItems = [
 		link: "/play",
 		requiredRole: "USER",
 	},
+];
+
+
+
+//______________________________________________________________________________________
+// ===== Save File Configuration =====
+
+/** An array of objects where each object has data related to its respective SaveFileType */
+export const SAVE_FILE_TYPE_MAPPER: Array<{
+    key: SaveFileType;
+    display?: string;
+    disabled?: boolean | false;
+    invisible?: boolean | false;
+}> = [
+    { key:"STORY", display:"Story Mode", disabled:true },
+    { key:"UNLIMITED", display:"Unlimited Mode", disabled:true },
+    { key:"DEBUG_NARRATIVE", disabled:true },
+    { key:"DEBUG_COMBAT" },
+    { key:"DEBUG_MISSIONS", disabled:true },
 ];

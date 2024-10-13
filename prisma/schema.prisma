@@ -1,8 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-
-
 //______________________________________________________________________________________
 // ===== Setup =====
 
@@ -18,8 +16,6 @@ datasource db {
     // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
     url      = env("DATABASE_URL")
 }
-
-
 
 //______________________________________________________________________________________
 // ===== Next Auth =====
@@ -59,11 +55,11 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
-    role          Role      @default(USER)
+    id            String     @id @default(cuid())
+    role          Role       @default(USER)
     screenName    String?
     name          String?
-    email         String?   @unique
+    email         String?    @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
@@ -79,8 +75,6 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
-
-
 //______________________________________________________________________________________
 // ===== Data =====
 
@@ -93,14 +87,13 @@ enum SaveFileType {
 }
 
 model SaveFile {
-    id String @id @default(cuid())
-    userId String
-    name String
-    type SaveFileType @default(STORY)
-    saveData Json?
-    inGameTime Int @default(0) 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @default(now())
+    id         String       @id @default(cuid())
+    userId     String
+    type       SaveFileType @default(STORY)
+    saveData   Json?
+    inGameTime Int          @default(0)
+    createdAt  DateTime     @default(now())
+    updatedAt  DateTime     @default(now())
 
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

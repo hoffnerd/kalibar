@@ -3,6 +3,8 @@
 // Packages -------------------------------------------------------------------------
 import Link from "next/link";
 // Data -----------------------------------------------------------------------------
+// Components -----------------------------------------------------------------------
+import { NavbarKit } from "@/components/navbar/NavbarKit";
 // Other ----------------------------------------------------------------------------
 
 
@@ -14,7 +16,8 @@ export default function Page() {
 
     //______________________________________________________________________________________
     // ===== Component Return =====
-    return (
+    return <>
+        <NavbarKit/>
         <main className="flex h-[90%] flex-col items-center justify-center">
             <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
                 <h1 className="text-center text-5xl font-extrabold tracking-tight sm:text-[5rem]">
@@ -36,6 +39,6 @@ export default function Page() {
                 </div>
             </div>
         </main>
-    );
+    </>
 }
 

@@ -3,7 +3,7 @@ import { type Session } from "next-auth";
 import { type Role } from "@prisma/client";
 // Packages -------------------------------------------------------------------------
 // Data -----------------------------------------------------------------------------
-import { PROJECT_ROLE_MAPPER } from "@/data/_config";
+import { PROJECT_ERRORS, PROJECT_ROLE_MAPPER } from "@/data/_config";
 // Other ----------------------------------------------------------------------------
 
 
@@ -24,6 +24,29 @@ const DEFAULT_OPTIONS_checkRoleAccessLevel = {
 
 //______________________________________________________________________________________
 // ===== Common Functions =====
+
+/**
+ * Takes a number of milliseconds as input and returns a promise that resolves after the specified time has elapsed.
+ * @param seconds - int, represents the number of seconds for which the function will pause execution before resolving the promise.
+ */
+export const sleep = (seconds: number) => new Promise((r) => setTimeout(r, (seconds * 1000)));
+
+/**
+ * Checks if a given value is an array and has a length greater than a specified value.
+ * @param array - variable that you want to check if it is an array.
+ * @param lengthToCheckFor - optional int, default is `0`. Specifies the minimum length that the array should have.
+ * @param exactLength - optional boolean, default is `false`. Determines whether the length of the 
+ * array should be exactly equal to the specified `lengthToCheckFor` value.
+ */
+export const isArray = (
+    array: any, 
+    lengthToCheckFor: number = 0, 
+    exactLength: boolean = false
+): array is any[] => {
+    if(!(array && Array.isArray(array))) return false;
+    if (exactLength) return array.length === lengthToCheckFor;
+    return array.length > lengthToCheckFor;
+}
 
 /**
  * Determines if a user has the required access level based on their role and session information.

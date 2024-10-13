@@ -20,18 +20,20 @@ import MobileNavSheet from "./MobileNavSheet";
  * @param {NavOptions} props.options - Options for the navbar
  */
 export default function MobileNavbar({
+    className,
     navItems,
     authNavItems,
     header = <div/>,
     options,
 }: {
+    className?: string;
     navItems: NavItems;
     authNavItems: NavItems;
     header?: React.JSX.Element;
     options?: NavOptions;
 }) {
     return (
-        <nav className="hiddenOnDesktop flex justify-between p-2 h-20">
+        <nav className={`flex justify-between p-2 ${className}`}>
             {header}
             <MobileNavSheet
                 sheetTriggerElement={<button><HamburgerMenuIcon className="h-8 w-8"/></button>}

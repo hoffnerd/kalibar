@@ -3,8 +3,9 @@
 // Packages -------------------------------------------------------------------------
 import Link from "next/link";
 // Server ---------------------------------------------------------------------------
-import { pageProtector } from "@/server/protector";
+import { pageProtection } from "@/server/protector";
 // Data -----------------------------------------------------------------------------
+import { PROJECT_LOWEST_ROLE_FOR_PLAY } from "@/data/_config";
 // Other ----------------------------------------------------------------------------
 
 
@@ -15,8 +16,8 @@ import { pageProtector } from "@/server/protector";
 export default async function Page() {
 
     //______________________________________________________________________________________
-    // ===== Session =====
-    await pageProtector({ requiredRole:"TESTER", redirectUnauthorized:"/play", inverse:true });
+    // ===== Protector =====
+    await pageProtection({ requiredRole:PROJECT_LOWEST_ROLE_FOR_PLAY, redirectUnauthorized:"/play", inverse:true });
 
 
     //______________________________________________________________________________________

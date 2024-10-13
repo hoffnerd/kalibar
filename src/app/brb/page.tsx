@@ -3,7 +3,7 @@
 // Packages -------------------------------------------------------------------------
 import Link from "next/link";
 // Server ---------------------------------------------------------------------------
-import { pageProtector } from "@/server/protector";
+import { pageProtection } from "@/server/protector";
 // Data -----------------------------------------------------------------------------
 // Other ----------------------------------------------------------------------------
 
@@ -16,7 +16,7 @@ export default async function Page() {
 
     //______________________________________________________________________________________
     // ===== Session =====
-    await pageProtector({ requiredRole:"ADMIN", redirectUnauthorized:"/" });
+    await pageProtection({ requiredRole:"ADMIN", redirectUnauthorized:"/" });
 
     //______________________________________________________________________________________
     // ===== Component Return =====

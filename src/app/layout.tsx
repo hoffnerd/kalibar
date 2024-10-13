@@ -11,6 +11,7 @@ import { GeistSans } from "geist/font/sans";
 import { PROJECT_DISPLAY_NAME, PROJECT_DESCRIPTION, NAVIGATION_MAIN, NAVIGATION_AUTH } from "@/data/_config";
 // Components -----------------------------------------------------------------------
 import Navbar from "@/components/navbar/Navbar";
+import ClientProvider from "@/rQuery/components/ClientProvider";
 // Other ----------------------------------------------------------------------------
 
 
@@ -35,8 +36,9 @@ export default function RootLayout({
     return (
         <html lang="en" className={`${GeistSans.variable} neonEffect neScrollBar neColorPurple h-full`}>
             <body className="bg-gradient-to-b from-[#121212] to-[#15162c] h-full">
-                <Navbar navItems={NAVIGATION_MAIN} authNavItems={NAVIGATION_AUTH}/>
-                {children}
+                <ClientProvider>
+                    {children}
+                </ClientProvider>
             </body>
         </html>
     );
