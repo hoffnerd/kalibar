@@ -11,8 +11,19 @@ import { Alert as ShadcnAlert, AlertTitle, AlertDescription } from "./shadcn/ui/
 
 
 //______________________________________________________________________________________
+// ===== Functions =====
+
+const readableIncrement = (time: number) => time < 10 ? `0${time}` : time;
+
+
+
+
+//______________________________________________________________________________________
 // ===== Micro-Components =====
 
+/**
+ * Renders an alert component with specified variant, title, and children.
+ */
 export function Alert({
     children,
     className,
@@ -31,4 +42,20 @@ export function Alert({
             <AlertDescription>{children}</AlertDescription>
         </ShadcnAlert>
     );
+}
+
+/**
+ * Converts a given time in seconds into a readable format of hours, minutes, and seconds (HH:MM:SS).
+ */
+export function ReadableTime({ timeInSeconds }: Readonly<{ timeInSeconds: number }>){
+    const hours = Math.floor(timeInSeconds / (60 * 60));
+
+    const divisorForMinutes = timeInSeconds % (60 * 60);
+    const minutes = Math.floor(divisorForMinutes / 60);
+
+    const divisorForSeconds = divisorForMinutes % 60;
+    const seconds = Math.ceil(divisorForSeconds);
+
+
+    return `${readableIncrement(hours)}:${readableIncrement(minutes)}:${readableIncrement(seconds)}`
 }

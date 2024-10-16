@@ -3,22 +3,22 @@
 // Types ----------------------------------------------------------------------------
 import { type SaveFileType } from "@prisma/client";
 // Packages -------------------------------------------------------------------------
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
 // Server ---------------------------------------------------------------------------
-import { pageProtection } from "@/server/protector";
 import { createSaveFile } from "@/server/saveFile";
+// rQuery ---------------------------------------------------------------------------
+import { getQueryClient } from "@/rQuery/getQueryClient";
 // Data -----------------------------------------------------------------------------
-import { PROJECT_LOWEST_ROLE_FOR_PLAY, SAVE_FILE_TYPE_MAPPER } from "@/data/_config";
+import { SAVE_FILE_TYPE_MAPPER } from "@/data/_config";
 // Styles ---------------------------------------------------------------------------
 import styles from "@/styles/advanced.module.css";
 // ShadcnUI -------------------------------------------------------------------------
 import { Button } from "@/components/shadcn/ui/button";
-import { DialogClose, DialogFooter } from "@/components/shadcn/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/shadcn/ui/select";
 // Components -----------------------------------------------------------------------
 import DialogCapsule from "@/components/shadcn/DialogCapsule";
-import { useState } from "react";
-import { getQueryClient } from "@/rQuery/getQueryClient";
-import { useMutation } from "@tanstack/react-query";
 // Other ----------------------------------------------------------------------------
 
 
@@ -29,13 +29,18 @@ import { useMutation } from "@tanstack/react-query";
 export default function NewSaveFile(){
 
     //______________________________________________________________________________________
+    // ===== Hooks =====
+    const router = useRouter();
+
+
+    //______________________________________________________________________________________
     // ===== Query =====
     const queryClient = getQueryClient();
     const { mutateAsync: createSaveFileMutation } = useMutation({
         mutationFn: createSaveFile,
-        onSuccess: () => {
+        onSuccess: ({ data }) => {
             queryClient.invalidateQueries({ queryKey: ['readSaveFiles'] });
-            setSaveFileType("");
+            router.push(`/play/${data?.id}`);
         },
         onError: (error) => setErrorMessage(error?.message || "Something went wrong trying to create a save file!")
     })
@@ -63,7 +68,7 @@ export default function NewSaveFile(){
             return;
         }
 
-        await createSaveFileMutation({ saveFileType: (saveFileType) as SaveFileType });
+        await createSaveFileMutation({ saveFileType: (saveFileType as SaveFileType) });
         setIsSaving(false);
     }
 
@@ -110,7 +115,7 @@ export default function NewSaveFile(){
                     </SelectTrigger>
                     <SelectContent>
                         {SAVE_FILE_TYPE_MAPPER.map(x => (!x.invisible) && (
-                            <SelectItem key={x.key} value={x.key} disabled={x?.disabled}>{x?.display ?? x.key}</SelectItem>
+                            <SelectItem key={x.key} value={x.key} disabled={x?.disabled}>{x?.display ?? x.key} Mode</SelectItem>
                         ))}
                     </SelectContent>
                 </Select>

@@ -3,9 +3,20 @@ import { fontFamily } from "tailwindcss/defaultTheme";
 
 export default {
     darkMode: ["class"],
-    content: ["./src/**/*.tsx"],
+    content: [
+        "./src/**/*.tsx",
+        "./src/**/*.ts",
+    ],
     theme: {
     	extend: {
+            screens: {
+                "xs": { raw: "(min-width: 1px)" },
+                "sm-h": { raw: "(min-height: 640px)" },
+                "md-h": { raw: "(min-height: 768px)" },
+                "lg-h": { raw: "(min-height: 1024px)" },
+                "xl-h": { raw: "(min-height: 1280px)" },
+                "2xl-h": { raw: "(min-height: 1536px)" },
+            },
     		fontFamily: {
     			sans: ["var(--font-geist-sans)", ...fontFamily.sans]
     		},

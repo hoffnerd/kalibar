@@ -6,7 +6,7 @@ import { pageProtection } from "@/server/protector";
 import { queryOptionsReadSaveFiles } from "@/rQuery/queryOptions/saveFile";
 import QueryPrefetch from "@/rQuery/components/QueryPrefetch";
 // Data -----------------------------------------------------------------------------
-import { PROJECT_LOWEST_ROLE_FOR_PLAY } from "@/data/_config";
+import { PROJECT_BACKGROUND, PROJECT_LOWEST_ROLE_FOR_PLAY } from "@/data/_config";
 // Styles ---------------------------------------------------------------------------
 // ShadcnUI -------------------------------------------------------------------------
 // Components -----------------------------------------------------------------------
@@ -41,16 +41,18 @@ export default async function Page(){
     // ===== Component Return =====
     return <>
         <NavbarKit/>
-        <main className="container m-auto sm:px-0 px-4">
-            <h2 className="text-3xl sm:text-5xl font-black pt-10">Save Files</h2>
-            <div className="w-full border-2 neonEffect neBorder neBorderGlow neColorBlue"/>
-            <div className="py-10">
-                <NewSaveFile/>
-                <div className="pt-10"/>
-                <QueryPrefetch fallback={<Loading/>} queryOptions={queryOptionsReadSaveFiles()}>
-                    <SaveFiles fallback={<Loading/>} />
-                </QueryPrefetch>
-            </div>
-        </main>
+        <div className={PROJECT_BACKGROUND}>
+            <main className="container m-auto sm:px-0 px-4">
+                <h2 className="text-3xl sm:text-5xl font-black pt-10">Save Files</h2>
+                <div className="w-full border-2 neonEffect neBorder neBorderGlow neColorBlue"/>
+                <div className="py-10">
+                    <NewSaveFile/>
+                    <QueryPrefetch fallback={<Loading/>} queryOptions={queryOptionsReadSaveFiles()}>
+                        <SaveFiles fallback={<Loading/>} />
+                    </QueryPrefetch>
+                </div>
+            </main>
+
+        </div>
     </>
 }

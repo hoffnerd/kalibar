@@ -27,6 +27,8 @@ export const PROJECT_ERRORS = {
     e_forbidden: { key:"e_forbidden", display:"Forbidden!" },
 }
 
+export const PROJECT_BACKGROUND: string = "bg-gradient-to-b from-[#121212] to-[#15162c]";
+
 
 //______________________________________________________________________________________
 // ===== Route Configuration =====
@@ -74,12 +76,12 @@ export const NAVIGATION_AUTH: NavItems = [
 export const SAVE_FILE_TYPE_MAPPER: Array<{
     key: SaveFileType;
     display?: string;
-    disabled?: boolean | false;
-    invisible?: boolean | false;
+    disabled?: boolean;
+    invisible?: boolean;
 }> = [
-    { key:"STORY", display:"Story Mode", disabled:true },
-    { key:"UNLIMITED", display:"Unlimited Mode", disabled:true },
-    { key:"DEBUG_NARRATIVE", disabled:true },
+    { key:"STORY", display:"Story",  disabled:true },
+    { key:"UNLIMITED", display:"Unlimited", disabled:true },
+    { key:"DEBUG_NARRATIVE" },
     { key:"DEBUG_COMBAT" },
     { key:"DEBUG_MISSIONS", disabled:true },
 ];
