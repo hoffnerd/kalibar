@@ -1,6 +1,5 @@
 "use client"
 
-
 // Types ----------------------------------------------------------------------------
 import { type SaveFile } from "@prisma/client"
 // Packages -------------------------------------------------------------------------
@@ -12,9 +11,8 @@ import { queryOptionsReadSaveFile } from "@/rQuery/queryOptions/saveFile"
 // ShadcnUI -------------------------------------------------------------------------
 // Components -----------------------------------------------------------------------
 import QueryHandler from "@/rQuery/components/QueryHandler"
-import NarrativePanels from "./Panels"
-import CombatPanels from "../combat/Panels"
-import { Alert } from "../microComponents"
+import Panels from "./game/Panels"
+import Game from "./game/Game"
 // Other ----------------------------------------------------------------------------
 
 
@@ -22,28 +20,26 @@ import { Alert } from "../microComponents"
 //______________________________________________________________________________________
 // ===== Component =====
 
-export default function Game({ saveFile }: { saveFile: SaveFile }){
+export default function SaveFileLoader({ id }: { id: SaveFile["id"] }){
     
     //______________________________________________________________________________________
-    // ===== Constants =====
+    // ===== Query =====
+    const { isLoading, isError, data } = useSuspenseQuery(queryOptionsReadSaveFile(id));
 
-    const { type } = saveFile;
-    
 
 
     //______________________________________________________________________________________
     // ===== Component Return =====
 
-    
-    switch (type) {
-        case "DEBUG_NARRATIVE": return <NarrativePanels saveFile={saveFile} />;
-        case "DEBUG_COMBAT": return <CombatPanels saveFile={saveFile} />;
-        default: return (
-            <div className="container">
-                <Alert variant="neonEffectWithGlow" className="neColorRed">
-                    This save file type is not set up yet.
-                </Alert>
-            </div>
-        )
-    }
+    return (
+        <QueryHandler
+            isLoading={isLoading}
+            isError={isError || data?.error}
+            isData={(data.data as SaveFile)?.id}
+            messageError={data?.message}
+            componentLoading={<Panels/>}
+        >
+            <Game saveFile={data?.data} />
+        </QueryHandler>
+    )
 }

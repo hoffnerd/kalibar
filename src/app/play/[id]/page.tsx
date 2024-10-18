@@ -11,7 +11,7 @@ import { PROJECT_LOWEST_ROLE_FOR_PLAY } from "@/data/_config";
 // ShadcnUI -------------------------------------------------------------------------
 // Components -----------------------------------------------------------------------
 import { NavSheet } from "@/components/navbar/NavbarKit";
-import Game from "@/components/game/Game";
+import SaveFileLoader from "@/components/SaveFileLoader";
 import Panels from "@/components/game/Panels";
 // Other ----------------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ export default async function Page({ params }: { params: { id: string } }){
         <NavSheet/>
         <main>
             <QueryPrefetch fallback={<Panels/>} queryOptions={queryOptionsReadSaveFile(params.id)}>
-                <Game id={params.id}/>
+                <SaveFileLoader id={params.id}/>
             </QueryPrefetch>
         </main>
     </>

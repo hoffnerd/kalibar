@@ -27,7 +27,6 @@ export const readSaveFiles = () => serverAction(async ({session}) => {
 }, { trace:"readSaveFiles", requiredRole:PROJECT_LOWEST_ROLE_FOR_PLAY })
 
 export const readSaveFile = (id: SaveFile["id"]) => serverAction(async ({session}) => {
-    await sleep(5)
     return await db.saveFile.findUnique({ where: { id, userId: session?.user.id } });
 }, { trace:"readSaveFile", requiredRole:PROJECT_LOWEST_ROLE_FOR_PLAY })
 
