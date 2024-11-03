@@ -1,7 +1,7 @@
 "use client"
 
 // Types ----------------------------------------------------------------------------
-import { type SaveFile } from "@prisma/client"
+import { type SaveFile } from "@/typeDefs";
 // Packages -------------------------------------------------------------------------
 import { useSuspenseQuery } from "@tanstack/react-query"
 // rQuery ---------------------------------------------------------------------------
@@ -10,9 +10,10 @@ import { queryOptionsReadSaveFile } from "@/rQuery/queryOptions/saveFile"
 // Styles ---------------------------------------------------------------------------
 // ShadcnUI -------------------------------------------------------------------------
 // Components -----------------------------------------------------------------------
-import QueryHandler from "@/rQuery/components/QueryHandler"
-import Panels from "./game/Panels"
-import Game from "./game/Game"
+import QueryHandler from "@/rQuery/components/QueryHandler";
+import Panels from "./game/Panels";
+import Game from "./game/Game";
+import GameClient from "./gameClient/GameClient";
 // Other ----------------------------------------------------------------------------
 
 
@@ -20,7 +21,7 @@ import Game from "./game/Game"
 //______________________________________________________________________________________
 // ===== Component =====
 
-export default function SaveFileLoader({ id }: { id: SaveFile["id"] }){
+export default function SaveFileLoader({ id }: Readonly<{ id: SaveFile["id"] }>){
     
     //______________________________________________________________________________________
     // ===== Query =====
@@ -39,7 +40,8 @@ export default function SaveFileLoader({ id }: { id: SaveFile["id"] }){
             messageError={data?.message}
             componentLoading={<Panels/>}
         >
-            <Game saveFile={data?.data} />
+            <GameClient saveFile={data?.data} />
+            <Game saveFileType={data?.data?.type} />
         </QueryHandler>
     )
 }

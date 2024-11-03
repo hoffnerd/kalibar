@@ -1,7 +1,13 @@
 
 // Types ----------------------------------------------------------------------------
 import { type Role, type SaveFileType } from "@prisma/client";
-import { type NavItems } from "@/interfaces";
+import { type ServerActionReturn } from "@/server/actions";
+import { 
+    type CrewCharacter, 
+    type SaveData, 
+    type AbilityLevels, 
+    type NavItems,
+} from "@/typeDefs";
 
 
 
@@ -9,10 +15,10 @@ import { type NavItems } from "@/interfaces";
 // ===== Project Configuration =====
 
 /** the readable name of the project. */
-export const PROJECT_DISPLAY_NAME: string = "Project Kalibar";
+export const PROJECT_DISPLAY_NAME = "Project Kalibar";
 
 /** the description of the project. */
-export const PROJECT_DESCRIPTION: string = "A game developed by the NextGenScripts team.";
+export const PROJECT_DESCRIPTION = "A game developed by the NextGenScripts team.";
 
 /** the user role "rankings" of the project. Higher index, the more power that role has */
 export const PROJECT_ROLE_MAPPER: Array<Role> = [ "UNAUTHORIZED", "USER", "TESTER", "ADMIN" ]
@@ -27,15 +33,20 @@ export const PROJECT_ERRORS = {
     e_forbidden: { key:"e_forbidden", display:"Forbidden!" },
 }
 
-export const PROJECT_BACKGROUND: string = "bg-gradient-to-b from-[#121212] to-[#15162c]";
+export const PROJECT_BACKGROUND = "bg-gradient-to-b from-[#121212] to-[#15162c]";
 
+export const DEFAULT_SERVER_ACTION_RETURN: ServerActionReturn = {
+    error: true,
+    message: "Default Error!",
+    data: null,
+}
 
 //______________________________________________________________________________________
 // ===== Route Configuration =====
 
-export const ROUTE_HOME: string = "/";
+export const ROUTE_HOME = "/";
 
-export const ROUTE_LOGIN: string = "/api/auth/signin";
+export const ROUTE_LOGIN = "/api/auth/signin";
 
 
 
@@ -85,3 +96,33 @@ export const SAVE_FILE_TYPE_MAPPER: Array<{
     { key:"DEBUG_COMBAT" },
     { key:"DEBUG_MISSIONS", disabled:true },
 ];
+
+/** The default ability levels a character has */
+export const DEFAULT_ABILITY_LEVELS: AbilityLevels = {
+    arcana: 0,
+    charisma: 0,
+    dexterity: 0,
+    wisdom: 0,
+    physicality: 0,
+}
+
+/** The default character */
+export const DEFAULT_CREW_CHARACTER: CrewCharacter = {
+    key: "default",
+    abilities: { ...DEFAULT_ABILITY_LEVELS },
+    proficiencies: [],
+    talents: [],
+}
+
+/** The default saveData each safe file should have. */
+export const DEFAULT_SAVE_DATA: SaveData = {
+    crew: {
+        dante: {
+            ...DEFAULT_CREW_CHARACTER,
+            key: "dante",
+        },
+    },
+    party: [ "dante" ],
+    // inventory: [],
+    narrative: [],
+}

@@ -1,5 +1,5 @@
 // Types ----------------------------------------------------------------------------
-import { type NavItem } from "@/interfaces";
+import { type NavItem } from "@/typeDefs";
 // Packages -------------------------------------------------------------------------
 // Shadcn ---------------------------------------------------------------------------
 import { navigationMenuTriggerStyle } from "@/components/shadcn/ui/navigation-menu";

@@ -1,8 +1,9 @@
 
 
 // Types ----------------------------------------------------------------------------
-import { type SaveFile } from "@prisma/client"
+import { type SaveFile } from "@/typeDefs";
 // Packages -------------------------------------------------------------------------
+import { BookIcon, ScrollTextIcon, SwordsIcon, UsersIcon } from "lucide-react";
 // Stores ---------------------------------------------------------------------------
 import { useMobilePanelsStore } from "@/stores/useMobilePanelsStore";
 // Data -----------------------------------------------------------------------------
@@ -10,7 +11,9 @@ import { useMobilePanelsStore } from "@/stores/useMobilePanelsStore";
 // ShadcnUI -------------------------------------------------------------------------
 // Components -----------------------------------------------------------------------
 import MobileNavButton from "../MobileNavButton";
-import { BookIcon, ScrollTextIcon, SwordsIcon, UsersIcon } from "lucide-react";
+import Initiative from "./Initiative";
+import Actions from "./Actions";
+import Battlefield from "./Battlefield";
 // Other ----------------------------------------------------------------------------
 
 
@@ -25,7 +28,7 @@ const BORDER = "border-4 rounded-3xl neonEffect neBorder neBorderGlow neColorPur
 //______________________________________________________________________________________
 // ===== Component =====
 
-export default function Panels({ saveFile }: { saveFile?: SaveFile }){
+export default function Panels({ saveFile }: Readonly<{ saveFile?: SaveFile }>){
 
     //______________________________________________________________________________________
     // ===== Stores =====
@@ -37,7 +40,7 @@ export default function Panels({ saveFile }: { saveFile?: SaveFile }){
     return (
         <div className="h-dvh lg:p-6">
             <div className="h-full grid grid-rows-5 sm-h:grid-rows-8 gap-3">
-                <div className={`p-6 row-span-4 sm-h:row-span-7 lg:p-0 lg:!row-span-8`}>
+                <div className={`px-3 pt-3 row-span-4 sm-h:row-span-7 lg:p-0 lg:!row-span-8`}>
 
                     <div className={`
                         h-full grid grid-rows-4 grid-cols-1 lg:grid-rows-1 lg:grid-cols-3 lg:gap-6
@@ -46,23 +49,26 @@ export default function Panels({ saveFile }: { saveFile?: SaveFile }){
 
                         <div className={`grid h-full grid-rows-1 lg:grid-rows-2 gap-6 ${activeCombatPanel === "battlefield" && "pb-6 lg:pb-0"}`}>
                             <div className={`
-                                h-full row-span-2 lg:row-span-1 ${BORDER} 
+                                h-full overflow-hidden row-span-2 lg:row-span-1 ${BORDER} 
                                 ${(activeCombatPanel === "initiative" || activeCombatPanel === "battlefield") ? "" : "hidden lg:block"}
                             `}>
-                                Initiative
+                                <Initiative/>
                             </div>
-                            <div className={`h-full row-span-2 lg:row-span-1 ${BORDER} ${activeCombatPanel === "narrative" ? "" : "hidden lg:block"}`}>
+                            <div className={`
+                                h-full overflow-hidden row-span-2 lg:row-span-1 ${BORDER} 
+                                ${activeCombatPanel === "narrative" ? "" : "hidden lg:block"}
+                            `}>
                                 Narrative
                             </div>
                         </div>
 
                         <div className={`row-span-3 col-span-2 lg:row-span-1 ${activeCombatPanel !== "battlefield" && "hidden lg:block"}`}>
-                            <div className=" h-full grid grid-rows-4 gap-6 sm-h:grid-rows-6 lg:grid-rows-8 lg:gap-6">
-                                <div className={`row-span-3 sm-h:row-span-5 lg:row-span-7 ${BORDER}`}>
-                                    Battlefield
+                            <div className="h-full grid grid-rows-5 gap-6 sm-h:grid-rows-6 md-h:grid-rows-9 lg:gap-6">
+                                <div className={`overflow-hidden row-span-4 sm-h:row-span-5 md-h:row-span-8 ${BORDER}`}>
+                                    <Battlefield/>
                                 </div>
-                                <div className={BORDER}>
-                                    Actions
+                                <div className={`overflow-hidden ${BORDER}`}>
+                                    <Actions/>
                                 </div>
                             </div>
                         </div>

@@ -1,5 +1,5 @@
 // Types ----------------------------------------------------------------------------
-import { type NavItem, type NavOptions } from "@/interfaces";
+import { type NavItem, type NavOptions } from "@/typeDefs";
 // Packages -------------------------------------------------------------------------
 import { ChevronRightIcon, ChevronLeftIcon, ExternalLinkIcon } from '@radix-ui/react-icons'
 // Components -----------------------------------------------------------------------

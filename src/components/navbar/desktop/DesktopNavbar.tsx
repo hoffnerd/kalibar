@@ -1,5 +1,5 @@
 // Types ----------------------------------------------------------------------------
-import { type NavItems, type NavOptions } from "@/interfaces";
+import { type NavItems, type NavOptions } from "@/typeDefs";
 // Packages -------------------------------------------------------------------------
 // Shadcn ---------------------------------------------------------------------------
 import {

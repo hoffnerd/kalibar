@@ -1,7 +1,7 @@
 "use client"
 
 // Types ----------------------------------------------------------------------------
-import { type SaveFile } from "@prisma/client"
+import { type SaveFile } from "@/typeDefs";
 // Packages -------------------------------------------------------------------------
 import Link from "next/link"
 import { useSuspenseQuery } from "@tanstack/react-query"

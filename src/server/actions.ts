@@ -24,7 +24,17 @@ interface Options {
     requiredRole?: Role | false;
 }
 
-
+/**
+ * Object that is returned from the `serverAction` function.
+ * - `error`
+ * - `message`
+ * - `data`
+ */
+export interface ServerActionReturn {
+    error: boolean;
+    message?: string;
+    data: any;
+}
 
 //______________________________________________________________________________________
 // ===== True Constants =====
@@ -60,11 +70,7 @@ export const serverAction = async (
         options: Options; 
     }) => Promise<any>, 
     options: Options={}
-): Promise<{
-    error: boolean;
-    message?: string;
-    data: any;
-}> => {
+): Promise<ServerActionReturn> => {
 
     // get any options, defaulted or passed in
     const optionsToUse = { ...DEFAULT_OPTIONS, ...options }

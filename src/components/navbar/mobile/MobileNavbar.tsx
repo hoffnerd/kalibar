@@ -1,5 +1,5 @@
 // Types ----------------------------------------------------------------------------
-import { type NavItems, type NavOptions } from "@/interfaces";
+import { type NavItems, type NavOptions } from "@/typeDefs";
 // Packages -------------------------------------------------------------------------
 import { HamburgerMenuIcon, Cross1Icon } from '@radix-ui/react-icons'
 // Components -----------------------------------------------------------------------
@@ -25,13 +25,13 @@ export default function MobileNavbar({
     authNavItems,
     header = <div/>,
     options,
-}: {
+}: Readonly<{
     className?: string;
     navItems: NavItems;
     authNavItems: NavItems;
     header?: React.JSX.Element;
     options?: NavOptions;
-}) {
+}>) {
     return (
         <nav className={`flex justify-between p-2 ${className}`}>
             {header}

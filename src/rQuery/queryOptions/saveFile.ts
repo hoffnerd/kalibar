@@ -1,7 +1,7 @@
 
 
 // Types ----------------------------------------------------------------------------
-import { type SaveFile } from "@prisma/client";
+import { type SaveFile } from "@/typeDefs";
 // Packages -------------------------------------------------------------------------
 import { queryOptions } from "@tanstack/react-query";
 // Server ---------------------------------------------------------------------------

@@ -1,36 +1,33 @@
 "use client"
 
-
 // Types ----------------------------------------------------------------------------
-import { type SaveFileType } from "@prisma/client";
 import { type SaveFile } from "@/typeDefs";
 // Packages -------------------------------------------------------------------------
 // rQuery ---------------------------------------------------------------------------
+// Context --------------------------------------------------------------------------
 // Components -----------------------------------------------------------------------
-import NarrativePanels from "./Panels"
-import CombatPanels from "../combat/Panels"
-import { Alert } from "../microComponents"
+import SavingGameIcon from "./SavingGameIcon";
+import InGameTime from "./InGameTime";
+import NarrativeClient from "./NarrativeClient";
 // Other ----------------------------------------------------------------------------
 
 
 
 //______________________________________________________________________________________
 // ===== Component =====
-
-export default function Game({ saveFileType }: Readonly<{ saveFileType?: SaveFileType }>){
+export default function GameClient({ saveFile }: Readonly<{ saveFile?: SaveFile }>){
 
     //______________________________________________________________________________________
     // ===== Component Return =====
 
-    switch (saveFileType) {
-        case "DEBUG_NARRATIVE": return <NarrativePanels/>;
-        case "DEBUG_COMBAT": return <CombatPanels/>;
-        default: return (
-            <div className="container">
-                <Alert variant="neonEffectWithGlow" className="neColorRed">
-                    This save file type is not set up yet.
-                </Alert>
-            </div>
-        )
-    }
+    if(!saveFile) return;
+    return (
+        <div className="overflow-hidden h-0 w-0">
+            
+            <SavingGameIcon/>
+            <InGameTime saveFile={saveFile} />
+            <NarrativeClient saveFile={saveFile} />
+        </div>
+    )
+        
 }

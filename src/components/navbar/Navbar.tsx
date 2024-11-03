@@ -1,6 +1,6 @@
 // Types ----------------------------------------------------------------------------
 import { type Session } from "next-auth";
-import { type NavItems, type NavOptions } from "@/interfaces";
+import { type NavItems, type NavOptions } from "@/typeDefs";
 // Actions --------------------------------------------------------------------------
 import { getServerAuthSession } from "@/server/auth";
 // Components -----------------------------------------------------------------------

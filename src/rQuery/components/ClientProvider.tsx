@@ -1,7 +1,8 @@
 "use client"
 
 // Packages -------------------------------------------------------------------------
-import {  QueryClientProvider } from "@tanstack/react-query"
+import { SessionProvider } from 'next-auth/react';
+import { QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { getQueryClient } from "../getQueryClient";
 // Other -------------------------------------------------------------------------
@@ -17,9 +18,11 @@ export default function ClientProvider({ children }: Readonly<{ children?: React
     const queryClient = getQueryClient();
 
     return (
-        <QueryClientProvider client={queryClient}>
-            {children}
-            <ReactQueryDevtools/>
-        </QueryClientProvider>
+        <SessionProvider>
+            <QueryClientProvider client={queryClient}>
+                {children}
+                <ReactQueryDevtools/>
+            </QueryClientProvider>
+        </SessionProvider>
     )
 }
