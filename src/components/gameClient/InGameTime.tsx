@@ -3,7 +3,8 @@
 // Types ----------------------------------------------------------------------------
 import { type SaveFile } from "@/typeDefs";
 // Packages -------------------------------------------------------------------------
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { format } from "date-fns";
 // Stores ---------------------------------------------------------------------------
 import { useGameStore } from "@/stores/useGameStore";
 // Data -----------------------------------------------------------------------------
@@ -12,6 +13,7 @@ import useTimer from "@/hooks/useTimer";
 // Components -----------------------------------------------------------------------
 import Portal from "../Portal";
 import { ReadableTime } from "../microComponents";
+import { Button } from "../shadcn/ui/button";
 // Other ----------------------------------------------------------------------------
 
 
@@ -37,9 +39,14 @@ export default function InGameTime({ saveFile }: Readonly<{ saveFile: SaveFile }
 
     //______________________________________________________________________________________
     // ===== Component Return =====
-    return <>
-        <Portal targetElementId="debuggerContent">
-            <ReadableTime timeInSeconds={seconds} />
+    return (
+        <Portal targetElementId="debuggerContent" childElementId="inGameTime_seconds">
+            <ul id="inGameTime_seconds" className="list-disc ml-5">
+                <li>
+                    <strong>In Game Time: </strong>
+                    <ReadableTime timeInSeconds={seconds} />
+                </li>
+            </ul>
         </Portal>
-    </>
+    );
 }

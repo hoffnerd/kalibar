@@ -16,20 +16,26 @@ import { createPortal } from "react-dom";
 export default function Portal({
     children,
     targetElementId,
+    childElementId,
+    debug=false,
 }: Readonly<{ 
     children: React.ReactNode; 
-    targetElementId: string 
+    targetElementId: string;
+    childElementId: string;
+    debug?: boolean;
 }>){
 
     //______________________________________________________________________________________
     // ===== Use Ref =====
     const targetElement = useRef<Element | any>(null);
+    const childElement = useRef<Element | any>(null);
 
 
 
     //______________________________________________________________________________________
     // ===== Hooks =====
-    const [ seconds, stopTimer ] = useTimer(1000);
+    const [ targetTries, stopTargetTimer ] = useTimer(1000, { cycleLimit:5 });
+    const [ childTries, stopChildTimer ] = useTimer(1000, { cycleLimit:10 });
 
 
 
@@ -41,18 +47,31 @@ export default function Portal({
     // }, [])
 
     useEffect(() => {
-        console.log({ trace:`Portal > ${targetElementId}`, "targetElement.current": targetElement.current })
+        if(debug) console.log({ trace:`Portal > target:${targetElementId}`, "targetElement.current": targetElement.current })
         if(targetElement.current){
-            stopTimer();
+            stopTargetTimer();
             return;
         }
         targetElement.current = window.document.getElementById(targetElementId);
-    }, [seconds, targetElement.current])
+    }, [targetTries, targetElement.current])
 
+    useEffect(() => {
+        if(debug) console.log({ trace:`Portal > child:${childElementId}`, "childElement.current": childElement.current })
+        if(childElement.current){
+            stopChildTimer();
+            return;
+        }
+        childElement.current = window.document.getElementById(childElementId);
+    }, [childTries, childElement.current])
 
+ 
 
     //______________________________________________________________________________________
     // ===== Component Return =====
     if(!targetElement.current) return;
-    return createPortal(children, targetElement.current);
+    return (
+        <div id={`target:${targetElementId}_child:${childElementId}`}>
+            {createPortal(children, targetElement.current)}
+        </div>
+    );
 }

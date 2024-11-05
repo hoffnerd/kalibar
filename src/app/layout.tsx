@@ -11,7 +11,7 @@ import { GeistSans } from "geist/font/sans";
 import { PROJECT_DISPLAY_NAME, PROJECT_DESCRIPTION, PROJECT_BACKGROUND } from "@/data/_config";
 // Components -----------------------------------------------------------------------
 import ClientProvider from "@/rQuery/components/ClientProvider";
-import { Debugger } from "@/components/Debugger";
+import { Debugger } from "@/components/debug/Debugger";
 // Other ----------------------------------------------------------------------------
 
 
@@ -37,7 +37,7 @@ export default function RootLayout({
         <html lang="en" className={`${GeistSans.variable} neonEffect neScrollBar neColorPurple h-full`}>
             <body className={`${PROJECT_BACKGROUND} min h-full`}>
                 <ClientProvider>
-                    <Debugger><div>child content</div></Debugger>
+                    <Debugger/>
                     {children}
                 </ClientProvider>
             </body>
