@@ -41,11 +41,11 @@ export default function Panels({ saveFile }: Readonly<{ saveFile?: SaveFile }>){
             <div className="h-full grid grid-rows-5 sm-h:grid-rows-8 gap-3">
                 <div className={`px-3 pt-3 row-span-4 sm-h:row-span-7 lg:p-0 lg:!row-span-8`}>
 
-                    <div className={`h-full grid grid-rows-4 grid-cols-1 lg:grid-rows-1 lg:grid-cols-3 lg:gap-6`}>
+                    <div className="h-full grid gap-6 grid-cols-1 lg:grid-cols-3">
 
-                        <div className={`row-span-4 col-span-2 lg:row-span-1 ${activeNarrativePanel !== "narrative" && "hidden lg:block"}`}>
-                            <div className="h-full grid grid-rows-5 gap-6 sm-h:grid-rows-6 md-h:grid-rows-9 lg:gap-6">
-                                <div className={`overflow-hidden row-span-4 sm-h:row-span-5 md-h:row-span-8 ${BORDER}`}>
+                        <div className={`col-span-2 ${activeNarrativePanel !== "narrative" && "hidden lg:block"}`}>
+                            <div className=" h-full grid grid-rows-4 gap-6 sm-h:grid-rows-6 md-h:grid-rows-8 lg:gap-6">
+                                <div className={`row-span-3 sm-h:row-span-5 md-h:row-span-7 ${BORDER}`}>
                                     {saveFile?.saveData && <Narrative saveData={saveFile.saveData} />}
                                 </div>
                                 <div className={`overflow-hidden ${BORDER}`}>
@@ -55,20 +55,15 @@ export default function Panels({ saveFile }: Readonly<{ saveFile?: SaveFile }>){
                         </div>
 
                         <div className={`
-                            hidden h-full gap-6 grid-rows-1 row-span-4 lg:row-span-1 lg:grid lg:grid-rows-2
+                            hidden h-full grid-rows-2 gap-6 lg:grid 
                             ${(activeNarrativePanel === "party" || activeNarrativePanel === "hq") && "xs:grid"}
                         `}>
-                            <div className={`
-                                h-full overflow-hidden row-span-2 lg:row-span-1 ${BORDER} 
-                                ${activeNarrativePanel !== "party" && "hidden lg:block"}
-                            `}>
-                                Party
+                            <div className={`h-full row-span-2 lg:row-span-1 ${BORDER} ${activeNarrativePanel !== "party" && "hidden lg:block"}`}>
+                                party
+                                <div id="partyInners"></div>
                             </div>
-                            <div className={`
-                                h-full overflow-hidden row-span-2 lg:row-span-1 ${BORDER} 
-                                ${activeNarrativePanel !== "hq" && "hidden lg:block"}
-                            `}>
-                                HQ
+                            <div className={`h-full row-span-2 lg:row-span-1 ${BORDER} ${activeNarrativePanel !== "hq" && "hidden lg:block"}`}>
+                                hq
                             </div>
                         </div>
 

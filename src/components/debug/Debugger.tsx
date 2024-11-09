@@ -40,7 +40,7 @@ export function Debugger({
     return (
         <div
             ref={ref}
-            className="fixed right-3 top-3 z-50 max-w-64 overflow-hidden border-2 border-slate-100"
+            className={`fixed right-3 top-3 z-50 max-w-64 overflow-hidden border-2 border-slate-100 ${(!openDebugger) && "w-14"}`}
             style={{ top: position.y, left: position.x }}
         >
             <div
@@ -65,9 +65,7 @@ export function Debugger({
                     {openCommands ? "Close" : "Open"} Commands
                 </Button>
                 <div className={`absolute top-14 left-0 p-3 bg-slate-800 border-2 border-slate-100 w-64 ${(!openCommands) && "hidden"}`}>
-                    <div id="debuggerCommands">
-
-                    </div>
+                    <div id="debuggerCommands"/>
                 </div>
                 <br />
                 <br />

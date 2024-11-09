@@ -4,7 +4,7 @@
 import { type SaveFileType } from "@prisma/client";
 import { type SaveData, type SaveFile } from "@/typeDefs";
 import { type ServerActionReturn } from "./actions";
-import { DEFAULT_STORY_NARRATIVE, StoryNarrative, type StoryNarrativeKey } from "@/data/narrative";
+import { DEFAULT_STORY_NARRATIVE, type Narrative, type NarrativeKey } from "@/data/narrative";
 // Server ---------------------------------------------------------------------------
 import { db } from "./db";
 import { serverAction } from "./actions";
@@ -12,7 +12,6 @@ import { serverAction } from "./actions";
 import { DEFAULT_SAVE_DATA, PROJECT_LOWEST_ROLE_FOR_PLAY } from "@/data/_config";
 import { STORY_NARRATIVE } from "@/data/narrative";
 // Other ----------------------------------------------------------------------------
-import { sleep } from "@/utils";
 import { handleError } from "@/utils/js-utils";
 
 
@@ -78,6 +77,26 @@ export const createSaveFile = ({
 //______________________________________________________________________________________
 // ===== Updates =====
 
+export const updateSaveDataReset = ({
+    id,
+    inGameTime,
+}: Readonly<{ 
+    id: SaveFile["id"];
+    inGameTime: SaveFile["inGameTime"];
+}>): Promise<SaveFileReturn> => serverAction(async ({session}) => {
+    const saveFile = await findUniqueSaveFile({ id, userId: session?.user.id  })
+    if(!saveFile) throw new Error("Can't find save file!");
+
+    return await db.saveFile.update({
+        where: { id },
+        data: { 
+            saveData: DEFAULT_SAVE_DATA as any,
+            inGameTime: inGameTime > saveFile.inGameTime ? inGameTime : saveFile.inGameTime,
+            updatedAt: new Date()
+        }
+    })
+}, { trace:"updateSaveDataReset", requiredRole:PROJECT_LOWEST_ROLE_FOR_PLAY })
+
 export const updateSaveDataAddNarrative = ({
     id,
     inGameTime,
@@ -85,7 +104,7 @@ export const updateSaveDataAddNarrative = ({
 }: Readonly<{ 
     id: SaveFile["id"];
     inGameTime: SaveFile["inGameTime"];
-    narrativeKey: StoryNarrativeKey;
+    narrativeKey: NarrativeKey;
 }>): Promise<SaveFileReturn> => serverAction(async ({session}) => {
     const saveFile = await findUniqueSaveFile({ id, userId: session?.user.id  })
     if(!saveFile) throw new Error("Can't find save file!");
@@ -94,13 +113,16 @@ export const updateSaveDataAddNarrative = ({
     if(saveData.narrative.includes(narrativeKey)) throw new Error("You already made this choice!");
 
     const lastSavedNarrativeKey = saveData.narrative.length > 0 && saveData.narrative[ saveData.narrative.length-1 ];
-    const lastSavedNarrativeObj: StoryNarrative = lastSavedNarrativeKey 
+    const lastSavedNarrativeObj: Narrative = lastSavedNarrativeKey 
         ? STORY_NARRATIVE[lastSavedNarrativeKey] 
         : DEFAULT_STORY_NARRATIVE
     
     let isPossibleKey = false;
     if(lastSavedNarrativeObj.nextNarrative && lastSavedNarrativeObj.nextNarrative === narrativeKey) isPossibleKey = true;
-    if(lastSavedNarrativeObj.choices && lastSavedNarrativeObj.choices.includes(narrativeKey as any)) isPossibleKey = true;
+    if(lastSavedNarrativeObj.choices){
+        const matchedChoice = lastSavedNarrativeObj.choices.find(choice => choice.key === narrativeKey);
+        if(matchedChoice?.key) isPossibleKey = true;
+    }
     if(!isPossibleKey) throw new Error("You are not allowed to make this choice!");
 
     saveData.narrative.push(narrativeKey);
@@ -113,4 +135,4 @@ export const updateSaveDataAddNarrative = ({
             updatedAt: new Date()
         }
     })
-}, { trace:"createSaveFile", requiredRole:PROJECT_LOWEST_ROLE_FOR_PLAY })
+}, { trace:"updateSaveDataAddNarrative", requiredRole:PROJECT_LOWEST_ROLE_FOR_PLAY })

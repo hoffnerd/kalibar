@@ -8,7 +8,6 @@ import { format } from "date-fns";
 // Context --------------------------------------------------------------------------
 // Components -----------------------------------------------------------------------
 import Portal from "../Portal";
-import { MenubarItem } from "../shadcn/ui/menubar";
 import SavingGameIcon from "./SavingGameIcon";
 import InGameTime from "./InGameTime";
 import NarrativeClient from "./NarrativeClient";

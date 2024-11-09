@@ -84,11 +84,10 @@
     body {
         @apply bg-background text-foreground;
     }
-    .invisibleText {
-        color: rgba(0, 0, 0, 0);
-        text-shadow: unset;
-        /* color: rgba(0,0,0,0) !important;
-        text-shadow: unset !important; */
+    .invisibleText,
+    .invisibleText *{
+        color: rgba(0,0,0,0) !important;
+        text-shadow: unset !important;
     }
 }
 

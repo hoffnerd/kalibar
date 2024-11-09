@@ -7,24 +7,26 @@ import { type ScriptProps } from "next/script";
 // ===== Types & Interfaces =====
 
 
-interface Primitive_NarrativeDisplayComponent {
-    component: "br" | "hr" | "span" | "p" | "div" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
-    display: Array<string | NarrativeDisplayComponent>;
-}
-
-export type NarrativeDisplayComponent = Primitive_NarrativeDisplayComponent & ScriptProps
 
 interface NarrativeChoice {
-    key: StoryNarrativeKey;
+    key: NarrativeKey;
     display: string;
 }
 
-export interface StoryNarrative {
+export type NarrativeDisplayArray = Array<string | NarrativeDisplayComponent>
+
+export interface NarrativeDisplayComponent {
+    component?: "br" | "hr" | "span" | "p" | "div" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+    display: NarrativeDisplayArray;
+    className?: string;
+}
+
+export interface Narrative {
     key: string;
-    display: Array<string | NarrativeDisplayComponent>;
+    display: NarrativeDisplayArray;
     type: "narrative" | "character";
     character?: "???" | "dante" | "zig" | "zorg";
-    nextNarrative?: StoryNarrativeKey;
+    nextNarrative?: NarrativeKey;
     choices?: Array<NarrativeChoice>;
 }
 
@@ -33,7 +35,7 @@ export interface StoryNarrative {
 //______________________________________________________________________________________
 // ===== Story Narratives =====
 
-const copyPaste: StoryNarrative = {
+const copyPaste: Narrative = {
     key: "copyPaste",
     display: [
         `Copy/Paste`,
@@ -51,27 +53,27 @@ const copyPaste: StoryNarrative = {
     ],
 }
 
-export const DEFAULT_STORY_NARRATIVE: StoryNarrative = {
+export const DEFAULT_STORY_NARRATIVE: Narrative = {
     key: "DEFAULT_STORY_NARRATIVE",
     display: [ "DEFAULT_STORY_NARRATIVE" ],
     type: "narrative",
     nextNarrative: "beta_1",
 }
 
-const beta_1: StoryNarrative = {
+const beta_1: Narrative = {
     key: "beta_1",
     display: ["Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."],
     type: "narrative",
     nextNarrative: "beta_2",
 }
 
-const beta_2: StoryNarrative = {
+const beta_2: Narrative = {
     key: "beta_2",
     display: [
         "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim",
         {
             component: "span",
-            display: [ `ZZZZZIIIIIIIIGGGGGG` ],
+            display: [ ` ZZZZZIIIIIIIIGGGGGG ` ],
             className: "neonEffect neText neTextGlow neColorRed"
         },
         "ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur."
@@ -85,7 +87,7 @@ const beta_2: StoryNarrative = {
     ],
 }
 
-const beta_2_a: StoryNarrative = {
+const beta_2_a: Narrative = {
     key: "beta_2_a",
     display: [
         `Vestibulum vehicula sapien ex, id mollis massa mattis in. Nam enim velit, tempor laoreet maximus id, elementum id erat.`,
@@ -95,7 +97,7 @@ const beta_2_a: StoryNarrative = {
     nextNarrative: "beta_2_a_1",
 }
 
-const beta_2_b: StoryNarrative = {
+const beta_2_b: Narrative = {
     key: "beta_2_b",
     display: [
         `Quisque efficitur tincidunt justo vel malesuada. Phasellus imperdiet efficitur velit, nec aliquet ex ullamcorper sed.`,
@@ -104,7 +106,7 @@ const beta_2_b: StoryNarrative = {
     nextNarrative: "beta_3",
 }
 
-const beta_2_c: StoryNarrative = {
+const beta_2_c: Narrative = {
     key: "beta_2_c",
     display: [
         `Integer eu mauris eget nunc hendrerit euismod sed ac mi. Integer malesuada felis justo, ut rutrum odio viverra at. Aliquam a fringilla felis, id consectetur lorem.`,
@@ -113,7 +115,7 @@ const beta_2_c: StoryNarrative = {
     nextNarrative: "beta_3",
 }
 
-const beta_2_a_1: StoryNarrative = {
+const beta_2_a_1: Narrative = {
     key: "beta_2_a_1",
     display: [
         `beta_2_a_1`,
@@ -129,7 +131,7 @@ const beta_2_a_1: StoryNarrative = {
     nextNarrative: "beta_3",
 }
 
-const beta_3: StoryNarrative = {
+const beta_3: Narrative = {
     key: "beta_3",
     display: ["Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."],
     type: "narrative",
@@ -139,16 +141,7 @@ const beta_3: StoryNarrative = {
 //______________________________________________________________________________________
 // ===== Export =====
 
-export type StoryNarrativeKey = 
-    "beta_1"
-    | "beta_2"
-    | "beta_2_a"
-    | "beta_2_a_1"
-    | "beta_2_b"
-    | "beta_2_c"
-    | "beta_3"
-
-
+export type NarrativeKey = keyof typeof STORY_NARRATIVE
 export const STORY_NARRATIVE = {
     beta_1,
     beta_2,

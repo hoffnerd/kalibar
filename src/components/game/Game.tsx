@@ -2,7 +2,6 @@
 
 
 // Types ----------------------------------------------------------------------------
-import { type SaveFileType } from "@prisma/client";
 import { type SaveFile } from "@/typeDefs";
 // Packages -------------------------------------------------------------------------
 // rQuery ---------------------------------------------------------------------------
@@ -17,14 +16,14 @@ import { Alert } from "../microComponents"
 //______________________________________________________________________________________
 // ===== Component =====
 
-export default function Game({ saveFileType }: Readonly<{ saveFileType?: SaveFileType }>){
+export default function Game({ saveFile }: Readonly<{ saveFile?: SaveFile }>){
 
     //______________________________________________________________________________________
-    // ===== Component Return =====
-
-    switch (saveFileType) {
-        case "DEBUG_NARRATIVE": return <NarrativePanels/>;
-        case "DEBUG_COMBAT": return <CombatPanels/>;
+    // ===== Component Return ===== 
+    if(!saveFile?.type) return <NarrativePanels/>;
+    switch (saveFile.type) {
+        case "DEBUG_NARRATIVE": return <NarrativePanels saveFile={saveFile} />;
+        case "DEBUG_COMBAT": return <CombatPanels saveFile={saveFile} />;
         default: return (
             <div className="container">
                 <Alert variant="neonEffectWithGlow" className="neColorRed">

@@ -27,9 +27,9 @@ const DEFAULT_OPTIONS_checkRoleAccessLevel = {
 
 /**
  * Takes a number of milliseconds as input and returns a promise that resolves after the specified time has elapsed.
- * @param seconds - int, represents the number of seconds for which the function will pause execution before resolving the promise.
+ * @param milliseconds - int, represents the number of milliseconds for which the function will pause execution before resolving the promise.
  */
-export const sleep = (seconds: number) => new Promise((r) => setTimeout(r, (seconds * 1000)));
+export const sleep = (milliseconds: number) => new Promise((r) => setTimeout(r, (milliseconds)));
 
 /**
  * Checks if a given value is an array and has a length greater than a specified value.

@@ -14,27 +14,18 @@ import { handleError } from "@/utils/js-utils";
 //______________________________________________________________________________________
 // ===== Interfaces =====
 
-/**
- * Object that changes the behavior of the `serverAction` function.
- * - `trace`
- * - `requiredRole`
- */
 interface Options {
     trace?: string;
     requiredRole?: Role | false;
 }
 
-/**
- * Object that is returned from the `serverAction` function.
- * - `error`
- * - `message`
- * - `data`
- */
 export interface ServerActionReturn {
     error: boolean;
     message?: string;
     data: any;
 }
+
+
 
 //______________________________________________________________________________________
 // ===== True Constants =====

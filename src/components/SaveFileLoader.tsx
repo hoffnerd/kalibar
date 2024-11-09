@@ -41,7 +41,7 @@ export default function SaveFileLoader({ id }: Readonly<{ id: SaveFile["id"] }>)
             componentLoading={<Panels/>}
         >
             <GameClient saveFile={data?.data} />
-            <Game saveFileType={data?.data?.type} />
+            <Game saveFile={data?.data} />
         </QueryHandler>
     )
 }

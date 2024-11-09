@@ -2,15 +2,15 @@
 
 // Types ----------------------------------------------------------------------------
 import { type SaveFile } from "@/typeDefs";
-import { type StoryNarrativeKey } from "@/data/narrative";
+import { type NarrativeKey } from "@/data/narrative";
 // Packages -------------------------------------------------------------------------
-import { useEffect, useRef } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useEffect } from "react";
 // rQuery ---------------------------------------------------------------------------
-import { getQueryClient } from "@/rQuery/getQueryClient";
-import { updateSaveDataAddNarrative } from "@/server/saveFile";
-import { useGameStore } from "@/stores/useGameStore";
-// Context --------------------------------------------------------------------------
+import useSaveGame from "@/hooks/useSaveGame";
+// Data --------------------------------------------------------------------------
+import { STORY_NARRATIVE } from "@/data/narrative";
+import Portal from "../Portal";
+import { Button } from "../shadcn/ui/button";
 // Components -----------------------------------------------------------------------
 // Other ----------------------------------------------------------------------------
 
@@ -21,30 +21,8 @@ import { useGameStore } from "@/stores/useGameStore";
 export default function NarrativeClient({ saveFile }: Readonly<{ saveFile: SaveFile }>){
 
     //______________________________________________________________________________________
-    // ===== Use Refs =====
-    const isSaving = useRef<boolean | any>(false);
-    
-
-
-    //______________________________________________________________________________________
-    // ===== Stores =====
-    const isGameSaving = useGameStore((state) => state.isGameSaving);
-    const inGameTime = useGameStore((state) => state.inGameTime);
-    const setStoreKeyValuePair = useGameStore((state) => state.setStoreKeyValuePair);
-
-
-
-    //______________________________________________________________________________________
-    // ===== Query =====
-    const queryClient = getQueryClient();
-    const { mutateAsync: updateSaveDataAddNarrativeMutation } = useMutation({
-        mutationFn: updateSaveDataAddNarrative,
-        onSuccess: ({ error, message, data:updatedSaveFile }) => {
-            queryClient.invalidateQueries({ queryKey: ['readSaveFiles'] })
-            if(updatedSaveFile?.updatedAt) setStoreKeyValuePair("lastSavedTime", updatedSaveFile.updatedAt);
-        },
-        // onError: (error) => setErrorMessage(error?.message || "Something went wrong trying to create a save file!")
-    })
+    // ===== Hooks =====
+    const { resetGame, addNarrative } = useSaveGame();
 
 
 
@@ -54,30 +32,20 @@ export default function NarrativeClient({ saveFile }: Readonly<{ saveFile: SaveF
     useEffect(() => {
         if(!saveFile) return;
         if(saveFile.saveData.narrative.length > 0) return;
-        addNarrative("beta_1");
+        const firstNarrativeKey = Object.keys(STORY_NARRATIVE)[0] as NarrativeKey;
+        addNarrative(firstNarrativeKey);
     }, [saveFile])
     
 
 
     //______________________________________________________________________________________
-    // ===== On Click Functions =====
-
-    const addNarrative = async (narrativeKey: StoryNarrativeKey) => {
-        if(isSaving.current) return;
-        if(isGameSaving) return;
-
-        isSaving.current = true;
-        setStoreKeyValuePair("isGameSaving", true);
-
-        await updateSaveDataAddNarrativeMutation({ id: saveFile.id, inGameTime, narrativeKey });
-        isSaving.current = false;
-        setStoreKeyValuePair("isGameSaving", false);
-    }
-
-
-
-    //______________________________________________________________________________________
     // ===== Component Return =====
 
-    return <></>;
+    return (
+        <Portal targetElementId="debuggerCommands" childElementId="NarrativeClient_resetGame">
+            <Button id="NarrativeClient_resetGame" variant="outline" onClick={()=>resetGame()}>
+                Reset Game
+            </Button>
+        </Portal>
+    );
 }

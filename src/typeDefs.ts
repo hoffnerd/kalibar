@@ -2,7 +2,7 @@ import {
     type Role,
     type SaveFile as SaveFilePrisma,
 } from "@prisma/client";
-import { StoryNarrativeKey } from "./data/narrative";
+import { NarrativeKey } from "./data/narrative";
 
 
 
@@ -63,7 +63,7 @@ export interface CrewCharacter {
 export interface SaveData {
     crew: Object;
     party: Array<string>;
-    narrative: Array<StoryNarrativeKey>;
+    narrative: Array<NarrativeKey>;
 }
 
 export interface SaveFile extends Omit<SaveFilePrisma, 'saveData'> {

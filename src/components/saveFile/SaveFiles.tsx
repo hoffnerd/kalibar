@@ -76,7 +76,7 @@ export default function SaveFiles({ fallback }: Readonly<{ fallback?: React.Reac
             messageData="Looks like you don't have any save files. Click the plus button to start the game!"
             componentLoading={fallback}
         >
-            {(data.data as SaveFile[]).map(saveFile => (
+            {data?.data && data.data.map(saveFile => (
                 <div key={saveFile.id} className="pt-10">
                     <SaveFileDisplay saveFile={saveFile} />
                 </div>
