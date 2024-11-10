@@ -2,17 +2,95 @@
 
 // Types ----------------------------------------------------------------------------
 import { type SaveData } from "@/typeDefs";
+import { type NarrativeCharacterDetails, type NarrativeDisplayArray } from "@/data/narrative";
 // Packages -------------------------------------------------------------------------
+import { useEffect, useRef } from "react";
 // Hooks ----------------------------------------------------------------------------
 // Data -----------------------------------------------------------------------------
 import { STORY_NARRATIVE } from "@/data/narrative";
-// Styles ---------------------------------------------------------------------------
-// ShadcnUI -------------------------------------------------------------------------
+import { CHARACTERS } from "@/data/characters";
 // Components -----------------------------------------------------------------------
 import TypingTextMany from "../typingText/TypingTextMany";
-import { useEffect, useRef } from "react";
 import TextMany from "../typingText/TextMany";
 // Other ----------------------------------------------------------------------------
+
+
+
+//______________________________________________________________________________________
+// ===== True Constants =====
+
+const BORDER = "border-4 rounded-3xl neonEffect neBorder neBorderGlow"
+
+
+
+//______________________________________________________________________________________
+// ===== Micro-Component =====
+
+function NarrativeText({
+    narrativeDisplayArray,
+    forcedComplete=false,
+}: Readonly<{ 
+    narrativeDisplayArray: NarrativeDisplayArray;
+    forcedComplete?: boolean;
+}>){
+    if(forcedComplete) return <TextMany narrativeDisplayArray={narrativeDisplayArray}/>;
+    return (
+        <div className="relative">
+            <div className="absolute w-full" aria-hidden="true">
+                <TypingTextMany narrativeDisplayArray={narrativeDisplayArray} />
+            </div>
+            <div className="invisibleText w-full">
+                <TextMany narrativeDisplayArray={narrativeDisplayArray}/>
+            </div>
+            {/* <div className="p-6"/> */}
+        </div>
+    )
+}
+
+function ChatBubbleDetails({
+    className,
+    display,
+}: Readonly<{ 
+    className: string;
+    display: string;
+}>){
+    return (
+        <div className={`neonEffect neText neTextGlow ${className}`}>
+            <h3 className="text-center">&nbsp;</h3>
+            <div className="w-20 h-20 bg-slate-600"/>
+            <h3 className="text-center">{display}</h3>
+        </div>
+    )
+}
+
+function ChatBubble({
+    narrativeDisplayArray,
+    characterDetails,
+    forcedComplete=false,
+}: Readonly<{ 
+    narrativeDisplayArray: NarrativeDisplayArray;
+    characterDetails: NarrativeCharacterDetails;
+    forcedComplete?: boolean;
+}>){
+    const { key, display, relation } = { ...CHARACTERS[characterDetails.key], ...characterDetails };
+    const bubbleColor = relation === "friendly" ? "neColorBlue" : relation === "enemy" ? "neColorRed" : "neColorWhite";
+    console.log({ key, display, relation, bubbleColor, "CHARACTERS[characterDetails.key]":CHARACTERS[characterDetails.key], characterDetails })
+    return (
+        <div className={`w-full ${key === "dante" && "flex place-content-end"}`}>
+            <div className={`p-3 w-11/12`}>
+                <div className={`${BORDER} ${bubbleColor} p-3 flex`}>
+                    {key !== "dante" && <ChatBubbleDetails className={`hidden sm:block pr-3 ${bubbleColor}`} display={display} />}
+                    <div>
+                        <h3 className={`block sm:hidden neonEffect neText neTextGlow ${bubbleColor}`}>{display}:</h3>
+                        <NarrativeText narrativeDisplayArray={narrativeDisplayArray} forcedComplete={forcedComplete} />
+                    </div>
+                    {key === "dante" && <ChatBubbleDetails className={`hidden sm:block pl-3 ${bubbleColor}`} display={display} />}
+                </div>
+            </div>
+        </div>
+    )
+}
+
 
 
 
@@ -25,6 +103,7 @@ export default function Narrative({ saveData }: Readonly<{ saveData: SaveData; }
     // ===== Reference =====
     const divScrollableRef = useRef<HTMLDivElement | null>(null);
 
+
     
     //______________________________________________________________________________________
     // ===== Use Effects =====
@@ -35,6 +114,10 @@ export default function Narrative({ saveData }: Readonly<{ saveData: SaveData; }
         divScrollableRef.current.scrollTo({ top:999999999999999, behavior:"smooth" })
     }, [saveData.narrative, divScrollableRef.current])
     
+
+
+    //______________________________________________________________________________________
+    // ===== Render Functions =====
 
 
     //______________________________________________________________________________________
@@ -50,20 +133,25 @@ export default function Narrative({ saveData }: Readonly<{ saveData: SaveData; }
                             <hr/>
                             <div className="p-2"/>
                         </>}
-                        {i !== saveData.narrative.length-1 
-                            ? <TextMany narrativeDisplayArray={narrative.display}/>
+                        
+                        {narrative.type === "character" && narrative.characterDetails?.key
+                            ? (
+                                <ChatBubble
+                                    narrativeDisplayArray={narrative.display}
+                                    characterDetails={narrative.characterDetails}
+                                    forcedComplete={i !== saveData.narrative.length-1}
+                                />
+                            )
                             : (
-                                <div className="relative">
-                                    <div className="absolute" aria-hidden="true">
-                                        <TypingTextMany narrativeDisplayArray={narrative.display} />
-                                    </div>
-                                    <div className="invisibleText">
-                                        <TextMany narrativeDisplayArray={narrative.display}/>
-                                    </div>
-                                    {/* <div className="p-6"/> */}
+                                <div className="text-center">
+                                    <NarrativeText
+                                        narrativeDisplayArray={narrative.display}
+                                        forcedComplete={i !== saveData.narrative.length-1}
+                                    />
                                 </div>
                             )
                         }
+
                     </div>
                 )
             })}

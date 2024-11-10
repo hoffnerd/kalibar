@@ -1,11 +1,10 @@
 
-import { type ScriptProps } from "next/script";
-
+// Types ----------------------------------------------------------------------------
+import { type Character, type CharacterKey, type CharacterRelation } from "./characters";
 
 
 //______________________________________________________________________________________
 // ===== Types & Interfaces =====
-
 
 
 interface NarrativeChoice {
@@ -21,11 +20,22 @@ export interface NarrativeDisplayComponent {
     className?: string;
 }
 
+// export interface NarrativeCharacterDetails extends Omit<
+//     Character, 
+//     'fullName' | 'abilities' | 'proficiencies' | 'talents'
+// > {  }
+
+export interface NarrativeCharacterDetails {
+    key: CharacterKey;
+    display?: string;
+    relation?: CharacterRelation;
+}
+
 export interface Narrative {
     key: string;
     display: NarrativeDisplayArray;
     type: "narrative" | "character";
-    character?: "???" | "dante" | "zig" | "zorg";
+    characterDetails?: NarrativeCharacterDetails;
     nextNarrative?: NarrativeKey;
     choices?: Array<NarrativeChoice>;
 }
@@ -46,7 +56,9 @@ const copyPaste: Narrative = {
         },
     ],
     type: "narrative",
-    character: "dante",
+    characterDetails: {
+        key: "dante",
+    },
     nextNarrative: "beta_1",
     choices: [
         { key:"beta_1", display:"" },
@@ -79,7 +91,9 @@ const beta_2: Narrative = {
         "ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur."
     ],
     type: "character",
-    character: "dante",
+    characterDetails: {
+        key: "dante",
+    },
     choices: [
         { key:"beta_2_a", display:"Beta 2A" },
         { key:"beta_2_b", display:"Beta 2B" },
@@ -93,7 +107,10 @@ const beta_2_a: Narrative = {
         `Vestibulum vehicula sapien ex, id mollis massa mattis in. Nam enim velit, tempor laoreet maximus id, elementum id erat.`,
     ],
     type: "character",
-    character: "dante",
+    characterDetails: {
+        key: "zig",
+        relation: "enemy"
+    },
     nextNarrative: "beta_2_a_1",
 }
 
@@ -127,7 +144,10 @@ const beta_2_a_1: Narrative = {
         `beta_2_a_1`,
     ],
     type: "narrative",
-    character: "dante",
+    characterDetails: {
+        key: "zig",
+        relation: "friendly"
+    },
     nextNarrative: "beta_3",
 }
 
@@ -136,6 +156,7 @@ const beta_3: Narrative = {
     display: ["Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."],
     type: "narrative",
 }
+
 
 
 //______________________________________________________________________________________

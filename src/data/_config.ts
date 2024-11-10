@@ -2,12 +2,9 @@
 // Types ----------------------------------------------------------------------------
 import { type Role, type SaveFileType } from "@prisma/client";
 import { type ServerActionReturn } from "@/server/actions";
-import { 
-    type CrewCharacter, 
-    type SaveData, 
-    type AbilityLevels, 
-    type NavItems,
-} from "@/typeDefs";
+import { type SaveData, type NavItems } from "@/typeDefs";
+// Data -----------------------------------------------------------------------------
+import { DEFAULT_CREW_CHARACTER } from "./characters";
 
 
 
@@ -96,23 +93,6 @@ export const SAVE_FILE_TYPE_MAPPER: Array<{
     { key:"DEBUG_COMBAT" },
     { key:"DEBUG_MISSIONS", disabled:true },
 ];
-
-/** The default ability levels a character has */
-export const DEFAULT_ABILITY_LEVELS: AbilityLevels = {
-    arcana: 0,
-    charisma: 0,
-    dexterity: 0,
-    wisdom: 0,
-    physicality: 0,
-}
-
-/** The default character */
-export const DEFAULT_CREW_CHARACTER: CrewCharacter = {
-    key: "default",
-    abilities: { ...DEFAULT_ABILITY_LEVELS },
-    proficiencies: [],
-    talents: [],
-}
 
 /** The default saveData each safe file should have. */
 export const DEFAULT_SAVE_DATA: SaveData = {

@@ -53,13 +53,6 @@ export interface AbilityLevels {
     physicality: number;
 }
 
-export interface CrewCharacter {
-    key: string;
-    abilities: AbilityLevels;
-    proficiencies: Array<string>;
-    talents: Array<string>;
-}
-
 export interface SaveData {
     crew: Object;
     party: Array<string>;
