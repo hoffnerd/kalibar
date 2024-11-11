@@ -1,6 +1,8 @@
 
 // Types ----------------------------------------------------------------------------
 import { type AbilityLevels } from "@/typeDefs";
+// Data -----------------------------------------------------------------------------
+import { AbilityKey, DEFAULT_ABILITY_LEVELS } from "./abilities";
 
 
 
@@ -18,6 +20,7 @@ const createCharacter = (characterDetails: {
 }) => {
     let newCharacter = structuredClone(DEFAULT_CREW_CHARACTER);
 
+    if(characterDetails.key) newCharacter.key = characterDetails.key as CharacterKey;
     if(characterDetails.display) newCharacter.display = characterDetails.display;
     if(characterDetails.fullName) newCharacter.fullName = characterDetails.fullName;
     if(characterDetails.relation) newCharacter.relation = characterDetails.relation;
@@ -60,17 +63,6 @@ export interface Character {
 
 //______________________________________________________________________________________
 // ===== Details =====
-
-export type AbilityKey = keyof typeof DEFAULT_ABILITY_LEVELS
-
-/** The default ability levels a character has */
-export const DEFAULT_ABILITY_LEVELS: AbilityLevels = {
-    arcana: 0,
-    charisma: 0,
-    dexterity: 0,
-    wisdom: 0,
-    physicality: 0,
-}
 
 /** The default character */
 export const DEFAULT_CREW_CHARACTER: Character = {

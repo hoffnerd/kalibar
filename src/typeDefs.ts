@@ -2,7 +2,8 @@ import {
     type Role,
     type SaveFile as SaveFilePrisma,
 } from "@prisma/client";
-import { NarrativeKey } from "./data/narrative";
+import { type NarrativeKey } from "./data/narrative";
+import { Character, type CharacterKey } from "./data/characters";
 
 
 
@@ -45,6 +46,8 @@ export interface NavOptions {
 //______________________________________________________________________________________
 // ===== Save File Types =====
 
+
+
 export interface AbilityLevels {
     arcana: number;
     charisma: number;
@@ -53,9 +56,15 @@ export interface AbilityLevels {
     physicality: number;
 }
 
+export interface Crew {
+    dante?: Character;
+    zig?: Character;
+    zorg?: Character;
+}
+
 export interface SaveData {
-    crew: Object;
-    party: Array<string>;
+    crew: Crew;
+    party: Array<CharacterKey>;
     narrative: Array<NarrativeKey>;
 }
 

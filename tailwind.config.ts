@@ -11,6 +11,11 @@ export default {
     	extend: {
             screens: {
                 "xs": { raw: "(min-width: 1px)" },
+                "0.25sm": { raw: "(min-width: 360px)" },
+                "0.5sm": { raw: "(min-width: 530px)" },
+                "0.5xl": { raw: "(min-width: 1090px)" },
+                "3xl": { raw: "(min-width: 1610px)" },
+                "4xl": { raw: "(min-width: 1611px)" },
                 "sm-h": { raw: "(min-height: 640px)" },
                 "md-h": { raw: "(min-height: 768px)" },
                 "lg-h": { raw: "(min-height: 1024px)" },

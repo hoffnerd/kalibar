@@ -13,6 +13,7 @@ import { useMobilePanelsStore } from "@/stores/useMobilePanelsStore";
 import MobileNavButton from "../MobileNavButton";
 import Choices from "./Choices";
 import Narrative from "./Narrative";
+import Party from "./Party";
 // Other ----------------------------------------------------------------------------
 
 
@@ -62,7 +63,7 @@ export default function Panels({ saveFile }: Readonly<{ saveFile?: SaveFile }>){
                                 h-full overflow-hidden row-span-2 lg:row-span-1 ${BORDER} 
                                 ${activeNarrativePanel !== "party" && "hidden lg:block"}
                             `}>
-                                Party
+                                <Party saveData={saveFile?.saveData}/>
                             </div>
                             <div className={`
                                 h-full overflow-hidden row-span-2 lg:row-span-1 ${BORDER} 

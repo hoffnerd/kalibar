@@ -4,7 +4,7 @@ import { type Role, type SaveFileType } from "@prisma/client";
 import { type ServerActionReturn } from "@/server/actions";
 import { type SaveData, type NavItems } from "@/typeDefs";
 // Data -----------------------------------------------------------------------------
-import { DEFAULT_CREW_CHARACTER } from "./characters";
+import { CHARACTERS, DEFAULT_CREW_CHARACTER } from "./characters";
 
 
 
@@ -97,10 +97,7 @@ export const SAVE_FILE_TYPE_MAPPER: Array<{
 /** The default saveData each safe file should have. */
 export const DEFAULT_SAVE_DATA: SaveData = {
     crew: {
-        dante: {
-            ...DEFAULT_CREW_CHARACTER,
-            key: "dante",
-        },
+        dante: CHARACTERS.dante,
     },
     party: [ "dante" ],
     // inventory: [],
