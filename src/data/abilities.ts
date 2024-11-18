@@ -33,16 +33,16 @@ const charisma: Ability = {
     display: "Charisma",
 }
 
-const dexterity: Ability = {
-    key: "dexterity",
-    short: "dex",
-    display: "Dexterity",
+const finesse: Ability = {
+    key: "finesse",
+    short: "fin",
+    display: "Finesse",
 }
 
-const wisdom: Ability = {
-    key: "wisdom",
-    short: "wis",
-    display: "Wisdom",
+const wit: Ability = {
+    key: "wit",
+    short: "wit",
+    display: "Sense/Wit",
 }
 
 const physicality: Ability = {
@@ -60,8 +60,8 @@ const physicality: Ability = {
 export const DEFAULT_ABILITY_LEVELS: AbilityLevels = {
     arcana: 0,
     charisma: 0,
-    dexterity: 0,
-    wisdom: 0,
+    finesse: 0,
+    wit: 0,
     physicality: 0,
 }
 
@@ -70,7 +70,7 @@ export type AbilityKey = keyof typeof ABILITIES;
 export const ABILITIES = {
     arcana,
     charisma,
-    dexterity,
-    wisdom,
+    finesse,
+    wit,
     physicality,
 }

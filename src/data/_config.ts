@@ -2,9 +2,10 @@
 // Types ----------------------------------------------------------------------------
 import { type Role, type SaveFileType } from "@prisma/client";
 import { type ServerActionReturn } from "@/server/actions";
-import { type SaveData, type NavItems } from "@/typeDefs";
+import { type SaveData, type NavItems, type Character, CombatEntity } from "@/typeDefs";
 // Data -----------------------------------------------------------------------------
-import { CHARACTERS, DEFAULT_CREW_CHARACTER } from "./characters";
+import { CHARACTERS } from "./characters";
+import { DEFAULT_ABILITY_LEVELS } from "./abilities";
 
 
 
@@ -74,6 +75,18 @@ export const NAVIGATION_AUTH: NavItems = [
 		requiredRole: "USER",
 	},
 ];
+
+
+
+//______________________________________________________________________________________
+// ===== Characters =====
+
+// export const DEFAULT_COMBAT_ENTITY: CombatEntity = {
+//     ...DEFAULT_CHARACTER,
+//     isDead: false,
+//     isUnconscious: false,
+//     isHidden: true,
+// }
 
 
 

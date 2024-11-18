@@ -1,77 +1,60 @@
 
 // Types ----------------------------------------------------------------------------
-import { type AbilityLevels } from "@/typeDefs";
 // Data -----------------------------------------------------------------------------
-import { AbilityKey, DEFAULT_ABILITY_LEVELS } from "./abilities";
+import { Character, CharacterOptional } from "@/typeDefs";
+import { DEFAULT_ABILITY_LEVELS } from "./abilities";
+// Other ----------------------------------------------------------------------------
 
 
 
 //______________________________________________________________________________________
 // ===== Functions =====
 
-const createCharacter = (characterDetails: {
-    key: string;
-    display: string;
-    fullName?: string;
-    relation?: CharacterRelation;
-    abilities?: AbilityLevels;
-    proficiencies?: Array<string>;
-    talents?: Array<string>;
-}) => {
-    let newCharacter = structuredClone(DEFAULT_CREW_CHARACTER);
+const handleCharacterObjectProperties = (defaultObj: any, obj: any) => {
+    let objToReturn = structuredClone(defaultObj);
+    obj && (Object.keys(obj) as Array<any>).forEach(key => {
+        if(obj?.[key]) objToReturn[key] = obj[key];
+    })
+    return objToReturn;
+}
 
-    if(characterDetails.key) newCharacter.key = characterDetails.key as CharacterKey;
+const handleCharacterArrayProperties = (defaultArray: Array<any>, array: Array<any>) => {
+    return [ ...new Set([ ...defaultArray, ...array ]) ]
+}
+
+/**
+ * Creates a new character object by merging provided character details with default values.
+ * @param characterDetails - object, with the details for the character you are building.
+ */
+export const createCharacter = (characterDetails: CharacterOptional) => {
+    let newCharacter = structuredClone(DEFAULT_CHARACTER);
+
+    if(characterDetails.key) newCharacter.key = characterDetails.key;
     if(characterDetails.display) newCharacter.display = characterDetails.display;
     if(characterDetails.fullName) newCharacter.fullName = characterDetails.fullName;
     if(characterDetails.relation) newCharacter.relation = characterDetails.relation;
 
-    characterDetails.abilities && (Object.keys(characterDetails.abilities) as Array<AbilityKey>).forEach(abilityKey => {
-        if(!(newCharacter.abilities[abilityKey] && characterDetails?.abilities?.[abilityKey])) return;
-        newCharacter.abilities[abilityKey] = characterDetails.abilities[abilityKey];
-    })
+    if(characterDetails.abilities) newCharacter.abilities = handleCharacterObjectProperties(newCharacter.abilities, characterDetails.abilities);
+    if(characterDetails.proficiencies) newCharacter.proficiencies = handleCharacterArrayProperties(newCharacter.proficiencies, characterDetails.proficiencies);
+    if(characterDetails.talents) newCharacter.talents = handleCharacterArrayProperties(newCharacter.talents, characterDetails.talents);
 
-    if(characterDetails.proficiencies){
-        newCharacter.proficiencies = [ ...new Set([ ...newCharacter.proficiencies, ...characterDetails.proficiencies ]) ];
-    }
-
-    if(characterDetails.talents){
-        newCharacter.talents = [ ...new Set([ ...newCharacter.talents, ...characterDetails.talents ]) ];
-    }
-
+    if(characterDetails.equipment) newCharacter.equipment = handleCharacterObjectProperties(newCharacter.equipment, characterDetails.equipment);
     return newCharacter;
 }
 
 
 
 //______________________________________________________________________________________
-// ===== Types & Interfaces =====
+// ===== Characters =====
 
-export type CharacterRelation = "friendly" | "enemy" | "none"
-
-export interface Character {
-    key: CharacterKey;
-    display: string;
-    fullName?: string;
-    relation: CharacterRelation;
-    abilities: AbilityLevels;
-    proficiencies: Array<string>;
-    talents: Array<string>;
-}
-
-
-
-
-//______________________________________________________________________________________
-// ===== Details =====
-
-/** The default character */
-export const DEFAULT_CREW_CHARACTER: Character = {
+export const DEFAULT_CHARACTER: Character = {
     key: "???",
     display: "???",
     relation: "none",
     abilities: { ...DEFAULT_ABILITY_LEVELS },
     proficiencies: [],
     talents: [],
+    equipment: {},
 }
 
 
@@ -106,7 +89,7 @@ const zorg = createCharacter({
 
 export type CharacterKey = keyof typeof CHARACTERS;
 export const CHARACTERS = {
-    "???": DEFAULT_CREW_CHARACTER,
+    "???": DEFAULT_CHARACTER,
     dante,
     zig,
     zorg,

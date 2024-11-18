@@ -1,7 +1,7 @@
 // Types ----------------------------------------------------------------------------
 import { type Session } from "next-auth";
 import { type Role } from "@prisma/client";
-import { type AbilityLevels } from "@/typeDefs";
+import { type CharacterRelation, type AbilityLevels, type CharacterOptional, type CharacterEquipmentKey, type CombatEntityOptional } from "@/typeDefs";
 import { type AbilityKey } from "@/data/abilities";
 // Packages -------------------------------------------------------------------------
 // Data -----------------------------------------------------------------------------
@@ -89,7 +89,7 @@ export const checkRoleAccessLevel = (
 export const calculateLevel = (abilityLevels:AbilityLevels) => {
     let level = 0;
     (Object.keys(abilityLevels) as Array<AbilityKey>).forEach(abilityKey => {
-        level =+ abilityLevels[abilityKey];
+        if(abilityLevels?.[abilityKey]) level =+ abilityLevels[abilityKey];
     });
     return level;
 }

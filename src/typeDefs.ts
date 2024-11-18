@@ -3,7 +3,7 @@ import {
     type SaveFile as SaveFilePrisma,
 } from "@prisma/client";
 import { type NarrativeKey } from "./data/narrative";
-import { Character, type CharacterKey } from "./data/characters";
+import { type CharacterKey } from "./data/characters";
 
 
 
@@ -46,18 +46,16 @@ export interface NavOptions {
 //______________________________________________________________________________________
 // ===== Save File Types =====
 
-
-
 export interface AbilityLevels {
-    arcana: number;
-    charisma: number;
-    dexterity: number;
-    wisdom: number;
-    physicality: number;
+    arcana?: number;
+    charisma?: number;
+    finesse?: number;
+    wit?: number;
+    physicality?: number;
 }
 
 export interface Crew {
-    dante?: Character;
+    dante: Character;
     zig?: Character;
     zorg?: Character;
 }
@@ -70,4 +68,56 @@ export interface SaveData {
 
 export interface SaveFile extends Omit<SaveFilePrisma, 'saveData'> {
     saveData: SaveData
+}
+
+
+
+//______________________________________________________________________________________
+// ===== Characters =====
+
+export type CharacterEquipmentKey = keyof CharacterEquipment;
+export interface CharacterEquipment {
+    headGear?: string;
+    armor?: string;
+    necklace?: string;
+    rings?: Array<string>;
+    leftHand?: string;
+    rightHand?: string;
+    bothHands?: string;
+}
+
+export type CharacterRelation = "friendly" | "enemy" | "none"
+
+export interface Character {
+    key: string;
+    display: string;
+    fullName?: string;
+    relation: CharacterRelation;
+    abilities: AbilityLevels;
+    proficiencies: Array<string>;
+    talents: Array<string>;
+    equipment: CharacterEquipment;
+}
+
+export interface CombatEntity extends Character {
+    isDead: boolean;
+    isUnconscious: boolean;
+    isHidden: boolean;
+}
+
+export interface CharacterOptional {
+    key: string;
+    display: string;
+    fullName?: string;
+    relation?: CharacterRelation;
+    abilities?: AbilityLevels;
+    proficiencies?: Array<string>;
+    talents?: Array<string>;
+    equipment?: any;
+}
+
+export interface CombatEntityOptional extends CharacterOptional {
+    isDead?: boolean;
+    isUnconscious?: boolean;
+    isHidden?: boolean;
 }
