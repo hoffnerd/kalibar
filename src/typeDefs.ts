@@ -3,7 +3,10 @@ import {
     type SaveFile as SaveFilePrisma,
 } from "@prisma/client";
 import { type NarrativeKey } from "./data/narrative";
-import { Character, type CharacterKey } from "./data/characters";
+import { type CharacterKey } from "./data/characters";
+import { type AbilityLevels, type SkillKey } from "./data/abilities";
+import { InventoryItemKey } from "./data/inventoryItems";
+import { ManeuverKey } from "./data/maneuvers";
 
 
 
@@ -46,28 +49,79 @@ export interface NavOptions {
 //______________________________________________________________________________________
 // ===== Save File Types =====
 
-
-
-export interface AbilityLevels {
-    arcana: number;
-    charisma: number;
-    dexterity: number;
-    wisdom: number;
-    physicality: number;
-}
-
-export interface Crew {
-    dante?: Character;
-    zig?: Character;
-    zorg?: Character;
-}
-
 export interface SaveData {
-    crew: Crew;
+    crew: {
+        [key in CharacterKey]?: CharacterSaveData;
+    };
     party: Array<CharacterKey>;
     narrative: Array<NarrativeKey>;
+    inventory: {
+        [key in InventoryItemKey]?: number;
+    };
 }
 
 export interface SaveFile extends Omit<SaveFilePrisma, 'saveData'> {
     saveData: SaveData
+}
+
+
+
+//______________________________________________________________________________________
+// ===== Characters =====
+
+export type CharacterSkill = {
+    [key in SkillKey]?: number;
+}
+
+export type CharacterEquipmentKey = keyof CharacterEquipment;
+export interface CharacterEquipment {
+    headGear?: InventoryItemKey;
+    armor?: InventoryItemKey;
+    necklace?: InventoryItemKey;
+    rings?: Array<InventoryItemKey>;
+    leftHand?: InventoryItemKey;
+    rightHand?: InventoryItemKey;
+    bothHands?: InventoryItemKey;
+}
+
+export type CharacterRelation = "friendly" | "enemy" | "none"
+
+export interface CharacterSaveData {
+    key: string;
+    display: string;
+    fullName?: string;
+    relation: CharacterRelation;
+    abilities: AbilityLevels;
+    talents: Array<string>;
+    equipment: CharacterEquipment;
+    maneuvers?: Array<ManeuverKey>;
+    maneuversAvailable?: Array<ManeuverKey>;
+}
+
+export interface Character extends CharacterSaveData {
+    skills: CharacterSkill;
+}
+
+export interface CombatEntity extends Character {
+    isDead: boolean;
+    isUnconscious: boolean;
+    isHidden: boolean;
+}
+
+export interface CharacterOptional {
+    key: string;
+    display: string;
+    fullName?: string;
+    relation?: CharacterRelation;
+    abilities?: AbilityLevels;
+    talents?: Array<string>;
+    equipment?: CharacterEquipment;
+    maneuvers?: Array<ManeuverKey>;
+    skills?: CharacterSkill;
+}
+
+export interface CombatEntityOptional extends CharacterOptional {
+    isDead?: boolean;
+    isUnconscious?: boolean;
+    isHidden?: boolean;
 }

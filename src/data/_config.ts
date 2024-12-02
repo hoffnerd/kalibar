@@ -2,9 +2,10 @@
 // Types ----------------------------------------------------------------------------
 import { type Role, type SaveFileType } from "@prisma/client";
 import { type ServerActionReturn } from "@/server/actions";
-import { type SaveData, type NavItems } from "@/typeDefs";
+import { type SaveData, type NavItems, type Character, type CharacterSaveData, type CombatEntity } from "@/typeDefs";
 // Data -----------------------------------------------------------------------------
-import { CHARACTERS, DEFAULT_CREW_CHARACTER } from "./characters";
+import { CHARACTERS } from "./characters";
+import { DEFAULT_ABILITY_LEVELS } from "./abilities";
 
 
 
@@ -78,6 +79,21 @@ export const NAVIGATION_AUTH: NavItems = [
 
 
 //______________________________________________________________________________________
+// ===== Characters =====
+
+// export const DEFAULT_COMBAT_ENTITY: CombatEntity = {
+//     ...DEFAULT_CHARACTER,
+//     isDead: false,
+//     isUnconscious: false,
+//     isHidden: true,
+// }
+
+/** @constant {number} - how many ability points a character has at level 0. */
+export const ABILITY_POINTS_AT_LEVEL_0 = 5;
+
+
+
+//______________________________________________________________________________________
 // ===== Save File Configuration =====
 
 /** An array of objects where each object has data related to its respective SaveFileType */
@@ -100,6 +116,10 @@ export const DEFAULT_SAVE_DATA: SaveData = {
         dante: CHARACTERS.dante,
     },
     party: [ "dante" ],
-    // inventory: [],
     narrative: [],
+    inventory: {
+        debugPhysicalWeapon: 1,
+        debugMagicalWeapon: 1,
+        potionHealthLevel1: 1,
+    },
 }

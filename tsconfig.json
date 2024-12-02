@@ -36,8 +36,8 @@
         "**/*.tsx",
         "**/*.cjs",
         "**/*.js",
-        ".next/types/**/*.ts"
-, "src/rQuery/ClientProvider.jsx"    ],
+        ".next/types/**/*.ts",
+        "src/rQuery/ClientProvider.jsx"
+    ],
     "exclude": ["node_modules"]
 }
-

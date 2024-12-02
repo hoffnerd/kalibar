@@ -1,6 +1,7 @@
 
 // Types ----------------------------------------------------------------------------
-import { type Character, type CharacterKey, type CharacterRelation } from "./characters";
+import { type CharacterKey } from "./characters";
+import { type Character, type CharacterRelation } from "../typeDefs";
 
 
 //______________________________________________________________________________________
