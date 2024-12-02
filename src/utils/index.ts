@@ -1,8 +1,7 @@
 // Types ----------------------------------------------------------------------------
 import { type Session } from "next-auth";
 import { type Role } from "@prisma/client";
-import { type CharacterRelation, type AbilityLevels, type CharacterOptional, type CharacterEquipmentKey, type CombatEntityOptional } from "@/typeDefs";
-import { type AbilityKey } from "@/data/abilities";
+import { type AbilityLevels, type AbilityKey } from "@/data/abilities";
 // Packages -------------------------------------------------------------------------
 // Data -----------------------------------------------------------------------------
 import { PROJECT_ERRORS, PROJECT_ROLE_MAPPER } from "@/data/_config";

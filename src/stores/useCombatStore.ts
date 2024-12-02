@@ -1,8 +1,9 @@
 "use client"
 
 // Types ----------------------------------------------------------------------------
+import { type CombatEntity, type CharacterSaveData} from '@/typeDefs';
 import { type Encounter } from '@/data/encounters/test';
-import { type SaveFile } from '@/typeDefs';
+import { type CharacterKey } from '@/data/characters';
 // Packages -------------------------------------------------------------------------
 import { create } from 'zustand'
 // Actions --------------------------------------------------------------------------
@@ -15,11 +16,24 @@ import { create } from 'zustand'
 //______________________________________________________________________________________
 // ===== Types & Interfaces =====
 
+export type FriendlyCharacterSaveData = {
+    [key in CharacterKey]?: CharacterSaveData;
+}
+
+type FriendlyEntities = {
+    [key in CharacterKey]?: CombatEntity;
+}
+
+type EnemyEntities = {
+    [key: string]: CombatEntity;
+}
+
+export type CombatStoreEntities = FriendlyEntities & EnemyEntities
+
 type StoreKeys = keyof CombatStoreState;
-// type StoreValues = boolean;
 
 export interface CombatStoreState {
-    entities: object;
+    entities: CombatStoreEntities;
     initiativeOrder: Array<string>;
     startingEntityKey?: string | null;
     roundCount: number;
@@ -31,7 +45,7 @@ export interface CombatStoreState {
 
 interface CombatStoreFunctions {
     setStoreKeyValuePair: ( key:StoreKeys, value:any ) => void;
-    initializeCombat: ( saveFile:SaveFile, encounter:Encounter ) => void;
+    initializeCombat: ( friendlies:FriendlyCharacterSaveData, encounter:Encounter ) => void;
 }
 
 
@@ -64,7 +78,8 @@ export const useCombatStore = create<CombatStoreState & CombatStoreFunctions>()(
     ...DEFAULT_STORE,
 
     setStoreKeyValuePair: (key, value) => set(() => ({ [key]:value })),
-    initializeCombat: (saveFile, encounter) => {
+    initializeCombat: (friendlies, encounter) => {
+        // let entities = structuredClone({ ...configurePartyEntities(), ...configureEnemyEntities() });
 
     }
 }))

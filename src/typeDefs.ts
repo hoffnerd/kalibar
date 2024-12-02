@@ -4,6 +4,9 @@ import {
 } from "@prisma/client";
 import { type NarrativeKey } from "./data/narrative";
 import { type CharacterKey } from "./data/characters";
+import { type AbilityLevels, type SkillKey } from "./data/abilities";
+import { InventoryItemKey } from "./data/inventoryItems";
+import { ManeuverKey } from "./data/maneuvers";
 
 
 
@@ -46,24 +49,15 @@ export interface NavOptions {
 //______________________________________________________________________________________
 // ===== Save File Types =====
 
-export interface AbilityLevels {
-    arcana?: number;
-    charisma?: number;
-    finesse?: number;
-    wit?: number;
-    physicality?: number;
-}
-
-export interface Crew {
-    dante: Character;
-    zig?: Character;
-    zorg?: Character;
-}
-
 export interface SaveData {
-    crew: Crew;
+    crew: {
+        [key in CharacterKey]?: CharacterSaveData;
+    };
     party: Array<CharacterKey>;
     narrative: Array<NarrativeKey>;
+    inventory: {
+        [key in InventoryItemKey]?: number;
+    };
 }
 
 export interface SaveFile extends Omit<SaveFilePrisma, 'saveData'> {
@@ -75,28 +69,37 @@ export interface SaveFile extends Omit<SaveFilePrisma, 'saveData'> {
 //______________________________________________________________________________________
 // ===== Characters =====
 
+export type CharacterSkill = {
+    [key in SkillKey]?: number;
+}
+
 export type CharacterEquipmentKey = keyof CharacterEquipment;
 export interface CharacterEquipment {
-    headGear?: string;
-    armor?: string;
-    necklace?: string;
-    rings?: Array<string>;
-    leftHand?: string;
-    rightHand?: string;
-    bothHands?: string;
+    headGear?: InventoryItemKey;
+    armor?: InventoryItemKey;
+    necklace?: InventoryItemKey;
+    rings?: Array<InventoryItemKey>;
+    leftHand?: InventoryItemKey;
+    rightHand?: InventoryItemKey;
+    bothHands?: InventoryItemKey;
 }
 
 export type CharacterRelation = "friendly" | "enemy" | "none"
 
-export interface Character {
+export interface CharacterSaveData {
     key: string;
     display: string;
     fullName?: string;
     relation: CharacterRelation;
     abilities: AbilityLevels;
-    proficiencies: Array<string>;
     talents: Array<string>;
     equipment: CharacterEquipment;
+    maneuvers?: Array<ManeuverKey>;
+    maneuversAvailable?: Array<ManeuverKey>;
+}
+
+export interface Character extends CharacterSaveData {
+    skills: CharacterSkill;
 }
 
 export interface CombatEntity extends Character {
@@ -111,9 +114,10 @@ export interface CharacterOptional {
     fullName?: string;
     relation?: CharacterRelation;
     abilities?: AbilityLevels;
-    proficiencies?: Array<string>;
     talents?: Array<string>;
-    equipment?: any;
+    equipment?: CharacterEquipment;
+    maneuvers?: Array<ManeuverKey>;
+    skills?: CharacterSkill;
 }
 
 export interface CombatEntityOptional extends CharacterOptional {

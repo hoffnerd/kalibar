@@ -1,7 +1,7 @@
 
 // Types ----------------------------------------------------------------------------
 // Data -----------------------------------------------------------------------------
-import { Character, CharacterOptional } from "@/typeDefs";
+import { type Character, type CharacterSaveData, type CharacterOptional } from "@/typeDefs";
 import { DEFAULT_ABILITY_LEVELS } from "./abilities";
 // Other ----------------------------------------------------------------------------
 
@@ -35,7 +35,6 @@ export const createCharacter = (characterDetails: CharacterOptional) => {
     if(characterDetails.relation) newCharacter.relation = characterDetails.relation;
 
     if(characterDetails.abilities) newCharacter.abilities = handleCharacterObjectProperties(newCharacter.abilities, characterDetails.abilities);
-    if(characterDetails.proficiencies) newCharacter.proficiencies = handleCharacterArrayProperties(newCharacter.proficiencies, characterDetails.proficiencies);
     if(characterDetails.talents) newCharacter.talents = handleCharacterArrayProperties(newCharacter.talents, characterDetails.talents);
 
     if(characterDetails.equipment) newCharacter.equipment = handleCharacterObjectProperties(newCharacter.equipment, characterDetails.equipment);
@@ -47,12 +46,11 @@ export const createCharacter = (characterDetails: CharacterOptional) => {
 //______________________________________________________________________________________
 // ===== Characters =====
 
-export const DEFAULT_CHARACTER: Character = {
+export const DEFAULT_CHARACTER: CharacterSaveData = {
     key: "???",
     display: "???",
     relation: "none",
     abilities: { ...DEFAULT_ABILITY_LEVELS },
-    proficiencies: [],
     talents: [],
     equipment: {},
 }
@@ -67,18 +65,45 @@ const dante = createCharacter({
     display: "Dante",
     fullName: "Dante Greyheart",
     relation: "friendly",
+    abilities: {
+        arcana: 1,
+        charisma: 1,
+        finesse: 0,
+        wit: 1,
+        physicality: 1,
+        vitality: 1,
+    },
+    equipment: {
+        rightHand: "debugPhysicalWeapon",
+    },
 })
 
 const zig = createCharacter({
     key: "zig",
     display: "Zig",
     fullName: "Zig Nuustor",
+    relation: "friendly",
+    abilities: {
+        arcana: 3,
+        wit: 2,
+    },
+    equipment: {
+        rightHand: "debugMagicalWeapon",
+    },
 })
 
 const zorg = createCharacter({
     key: "zorg",
     display: "Zorg",
     fullName: "Zorg Nuustor",
+    relation: "friendly",
+    abilities: {
+        physicality: 3,
+        vitality: 2,
+    },
+    equipment: {
+        bothHands: "debugPhysicalWeapon",
+    },
 })
 
 
