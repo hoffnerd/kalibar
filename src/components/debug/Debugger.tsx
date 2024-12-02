@@ -59,7 +59,7 @@ export function Debugger({
             </div>
             <div
                 id="debuggerContent"
-                className={`relative ${openDebugger ? "bg-slate-950 p-4" : "hidden"}`}
+                className={`relative overflow-auto ${openDebugger ? "bg-slate-950 p-4" : "hidden"}`}
             >  
                 <Button variant="outline" className="full-w" onClick={()=>setOpenCommands(previousOpen => !previousOpen)}>
                     {openCommands ? "Close" : "Open"} Commands

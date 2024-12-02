@@ -2,8 +2,7 @@
 
 // Types ----------------------------------------------------------------------------
 import { ABILITIES, AbilityKey } from "@/data/abilities";
-import { type Character } from "@/data/characters";
-import { type SaveData } from "@/typeDefs";
+import { type Character, type CharacterSaveData, type SaveData } from "@/typeDefs";
 // Packages -------------------------------------------------------------------------
 // Stores ---------------------------------------------------------------------------
 // Data -----------------------------------------------------------------------------
@@ -17,7 +16,7 @@ import { calculateLevel } from "@/utils";
 //______________________________________________________________________________________
 // ===== Micro-Components =====
 
-function EntityCard({ character }: Readonly<{ character?: Character; }>){
+function EntityCard({ character }: Readonly<{ character?: CharacterSaveData; }>){
     return (
         <div className="px-6 pb-6">
             <div className="w-full flex overflow-hidden text-sm border-4 rounded-3xl neonEffect neBorder neBorderGlow neColorBlue">
@@ -29,19 +28,19 @@ function EntityCard({ character }: Readonly<{ character?: Character; }>){
                         <div>{character?.display}</div>
                         <div>Lvl: {character?.abilities ? calculateLevel(character.abilities) : 0}</div>
                     </div>
-                    <div className="grid grid-cols-5 gap-2 text-center">
+                    <div className="grid grid-cols-6 gap-2 text-center">
                         {(Object.keys(ABILITIES) as Array<AbilityKey>).map(abilityKey => (
                             <div key={abilityKey}>
-                                <div className="hidden 3xl:block">{ABILITIES[abilityKey].display}</div>
-                                <div className="uppercase hidden 0.5xl:block 3xl:hidden">{ABILITIES[abilityKey].short}</div>
-                                <div className="uppercase hidden lg:block 0.5xl:hidden">{ABILITIES[abilityKey].short[0]}</div>
+                                <div className="hidden 4xl:block">{ABILITIES[abilityKey].display}</div>
+                                <div className="uppercase hidden 3xl:block 4xl:hidden">{ABILITIES[abilityKey].short}</div>
+                                <div className="uppercase hidden lg:block 3xl:hidden">{ABILITIES[abilityKey].short[0]}</div>
                                 <div className="hidden 0.5sm:block lg:!hidden">{ABILITIES[abilityKey].display}</div>
                                 <div className="uppercase hidden 0.25sm:block 0.5sm:hidden">{ABILITIES[abilityKey].short}</div>
                                 <div className="uppercase block 0.25sm:hidden">{ABILITIES[abilityKey].short[0]}</div>
                             </div>
                         ))}
                     </div>
-                    <div className="grid grid-cols-5 gap-2 text-center">
+                    <div className="grid grid-cols-6 gap-2 text-center">
                         {(Object.keys(ABILITIES) as Array<AbilityKey>).map(abilityKey => (
                             <div key={abilityKey}>{character?.abilities?.[abilityKey] || 0}</div>
                         ))}
