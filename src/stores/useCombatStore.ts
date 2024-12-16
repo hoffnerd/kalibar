@@ -2,7 +2,7 @@
 
 // Types ----------------------------------------------------------------------------
 import { type CombatEntity, type CharacterSaveData} from '@/typeDefs';
-import { type Encounter } from '@/data/encounters/test';
+import { type Encounter } from '@/data/combat/encounters';
 import { type CharacterKey } from '@/data/characters';
 // Packages -------------------------------------------------------------------------
 import { create } from 'zustand'
@@ -10,6 +10,7 @@ import { create } from 'zustand'
 // Components -----------------------------------------------------------------------
 // Data -----------------------------------------------------------------------------
 // Other ----------------------------------------------------------------------------
+import { configureEnemyEntities, configureFriendlyEntities, getInitiativeOrder } from '@/utils/combat';
 
 
 
@@ -44,6 +45,7 @@ export interface CombatStoreState {
 }
 
 interface CombatStoreFunctions {
+    resetStore: () => void;
     setStoreKeyValuePair: ( key:StoreKeys, value:any ) => void;
     initializeCombat: ( friendlies:FriendlyCharacterSaveData, encounter:Encounter ) => void;
 }
@@ -77,9 +79,11 @@ const DEFAULT_STORE: CombatStoreState = {
 export const useCombatStore = create<CombatStoreState & CombatStoreFunctions>()((set) => ({
     ...DEFAULT_STORE,
 
+    resetStore: () => set(() => DEFAULT_STORE),
     setStoreKeyValuePair: (key, value) => set(() => ({ [key]:value })),
     initializeCombat: (friendlies, encounter) => {
-        // let entities = structuredClone({ ...configurePartyEntities(), ...configureEnemyEntities() });
-
+        const entities = structuredClone({ ...configureFriendlyEntities(friendlies), ...configureEnemyEntities(encounter) });
+        const initiativeOrder = getInitiativeOrder(entities);
+        set(() => ({ entities, initiativeOrder, startingEntityKey: initiativeOrder[0] }));
     }
 }))

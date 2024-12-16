@@ -20,7 +20,7 @@ import Panels from "@/components/game/Panels";
 //______________________________________________________________________________________
 // ===== Component =====
 
-export default async function Page({ params }: Readonly<{ params: { id: string } }>){
+export default async function Page({ params }: Readonly<{ params: { id: string, encounterKey: string } }>){
 
     //______________________________________________________________________________________
     // ===== Protector =====
@@ -34,7 +34,7 @@ export default async function Page({ params }: Readonly<{ params: { id: string }
         <NavSheet/>
         <main>
             <QueryPrefetch fallback={<Panels/>} queryOptions={queryOptionsReadSaveFile(params.id)}>
-                <SaveFileLoader params={params} type="NARRATIVE"/>
+                <SaveFileLoader params={params} type="COMBAT"/>
             </QueryPrefetch>
         </main>
     </>
