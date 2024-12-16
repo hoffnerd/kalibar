@@ -14,6 +14,7 @@ import QueryHandler from "@/rQuery/components/QueryHandler";
 import Panels from "./game/Panels";
 import Game from "./game/Game";
 import GameClient from "./gameClient/GameClient";
+import CombatClient from "./gameClient/CombatClient";
 // Other ----------------------------------------------------------------------------
 
 
@@ -21,11 +22,17 @@ import GameClient from "./gameClient/GameClient";
 //______________________________________________________________________________________
 // ===== Component =====
 
-export default function SaveFileLoader({ id }: Readonly<{ id: SaveFile["id"] }>){
+export default function SaveFileLoader({
+    params,
+    type,
+}: Readonly<{
+    params: { id: string; encounterKey?: string };
+    type?: "NARRATIVE" | "COMBAT";
+}>) {
     
     //______________________________________________________________________________________
     // ===== Query =====
-    const { isLoading, isError, data } = useSuspenseQuery(queryOptionsReadSaveFile(id));
+    const { isLoading, isError, data } = useSuspenseQuery(queryOptionsReadSaveFile(params.id));
 
 
 
@@ -40,8 +47,11 @@ export default function SaveFileLoader({ id }: Readonly<{ id: SaveFile["id"] }>)
             messageError={data?.message}
             componentLoading={<Panels/>}
         >
-            <GameClient saveFile={data?.data} />
-            <Game saveFile={data?.data} />
+            {type === "COMBAT" 
+                ? <CombatClient saveFile={data?.data} encounterKey={params.encounterKey} />
+                : <GameClient saveFile={data?.data} />
+            } 
+            <Game type={type} saveFile={data?.data} />
         </QueryHandler>
     )
 }

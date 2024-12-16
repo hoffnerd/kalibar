@@ -103,6 +103,8 @@ export interface Character extends CharacterSaveData {
 }
 
 export interface CombatEntity extends Character {
+    hp: number;
+    aggro?: number;
     isDead: boolean;
     isUnconscious: boolean;
     isHidden: boolean;

@@ -1,15 +1,17 @@
 
 
 // Types ----------------------------------------------------------------------------
+import { type CombatEntity } from "@/typeDefs";
 // Packages -------------------------------------------------------------------------
 // Stores ---------------------------------------------------------------------------
-// Data -----------------------------------------------------------------------------
-// Styles ---------------------------------------------------------------------------
+import { useCombatStore } from "@/stores/useCombatStore";
 // ShadcnUI -------------------------------------------------------------------------
-import { HorizontalLine } from "../microComponents";
 import { Progress } from "../shadcn/ui/progress";
 // Components -----------------------------------------------------------------------
+import { HorizontalLine } from "../microComponents";
+// Data -----------------------------------------------------------------------------
 // Other ----------------------------------------------------------------------------
+import { getTotalLevel } from "@/utils/combat";
 
 
 
@@ -34,7 +36,7 @@ function ProgressBar({ className, indicatorClassName, value, max }: Readonly<{
     )
 }
 
-function EntityCardFriendly(){
+function EntityCardFriendly({entity}:Readonly<{ entity:CombatEntity }>){
     return (
         <div className="px-6 pb-6">
             <div className="w-full flex overflow-hidden text-sm border-4 rounded-3xl neonEffect neBorder neBorderGlow neColorBlue">
@@ -43,18 +45,18 @@ function EntityCardFriendly(){
                 </div>
                 <div className="py-3 pr-3 w-full max-h-[104px] overflow-auto">
                     <div className="w-full flex items-center justify-between">
-                        <div>Name</div>
-                        <div>Lvl: 0</div>
+                        <div>{entity.display}</div>
+                        <div>Lvl: {getTotalLevel(entity.abilities)}</div>
                     </div>
 
                     <div className="flex flex-row">
                         <div className="text-nowrap">
-                            <div>HP: 25/50</div>
-                            <div>AR: 50%</div>
+                            <div>HP: {entity.hp}/{entity.skills.maxHealth}</div>
+                            <div>AR: {entity.aggro}%</div>
                         </div>
                         <div className="w-full">
-                            <ProgressBar indicatorClassName="neColorGreen" value={25} max={50}/>
-                            <ProgressBar indicatorClassName="neColorRed" value={50} max={100}/>
+                            <ProgressBar indicatorClassName="neColorGreen" value={entity.hp} max={entity.skills.maxHealth || 0}/>
+                            <ProgressBar indicatorClassName="neColorRed" value={entity.aggro || 0} max={100}/>
                         </div>
                     </div>
 
@@ -82,7 +84,7 @@ function EntityCardFriendly(){
     )
 }
 
-function EntityCardEnemy(){
+function EntityCardEnemy({entity}:Readonly<{ entity:CombatEntity }>){
     return (
         <div className="px-6 pb-6">
             <div className="w-full flex overflow-hidden text-sm border-4 rounded-3xl neonEffect neBorder neBorderGlow neColorRed">
@@ -91,16 +93,16 @@ function EntityCardEnemy(){
                 </div>
                 <div className="py-3 pr-3 w-full max-h-[104px] overflow-auto">
                     <div className="w-full flex items-center justify-between">
-                        <div>Name</div>
-                        <div>Lvl: 0</div>
+                        <div>{entity.display}</div>
+                        <div>Lvl: {getTotalLevel(entity.abilities)}</div>
                     </div>
 
                     <div className="flex flex-row">
                         <div className="text-nowrap">
-                            <div>HP: 25/50</div>
+                            <div>HP: {entity.hp}/{entity.skills.maxHealth}</div>
                         </div>
                         <div className="w-full">
-                            <ProgressBar indicatorClassName="neColorGreen" value={25} max={50}/>
+                            <ProgressBar indicatorClassName="neColorGreen" value={entity.hp} max={entity.skills.maxHealth || 0}/>
                         </div>
                     </div>
                 </div>
@@ -108,6 +110,15 @@ function EntityCardEnemy(){
         </div>
     )
 }
+
+function InitiativeCard({ index, entity }: Readonly<{ index:number, entity:CombatEntity }>){
+    const startingEntityKey = useCombatStore(state => state.startingEntityKey);
+    return <>
+        {index !== 0 && entity.key === startingEntityKey && <HorizontalLine className="pb-6"/>}
+        {entity.relation === "enemy" && <EntityCardEnemy entity={entity} />}
+        {entity.relation === "friendly" && <EntityCardFriendly entity={entity}/>}
+    </>;
+} 
 
 
 
@@ -118,20 +129,21 @@ function EntityCardEnemy(){
 export default function Initiative(){
 
     //______________________________________________________________________________________
+    // ===== Stores =====
+    const entities = useCombatStore(state => state.entities);
+    const initiativeOrder = useCombatStore(state => state.initiativeOrder);
+
+    //______________________________________________________________________________________
     // ===== Component Return =====
 
     return (
         <div className="h-full overflow-auto">
             <div className="pt-6"/>
-
-            <EntityCardEnemy/>
-
-            <HorizontalLine className="pb-6"/>
-
-            <EntityCardFriendly/>
-            <EntityCardFriendly/>
-            <EntityCardFriendly/>
-            <EntityCardFriendly/>
+            {initiativeOrder.map((entityKey, index) => {
+                const entity = entities[entityKey];
+                if(!entity) return;
+                return <InitiativeCard key={entityKey} index={index} entity={entity}/>
+            })}
         </div>
     )
 }

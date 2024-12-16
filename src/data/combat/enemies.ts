@@ -14,6 +14,7 @@ import { createCharacter } from "../characters";
 export interface Enemy extends Omit<CharacterSaveData, "key" | "fullName" | "relation"> {
     key: string;
     relation: "enemy";
+    isHidden?: boolean;
 }
 
 

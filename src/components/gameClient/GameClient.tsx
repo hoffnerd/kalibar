@@ -4,8 +4,8 @@
 import { type SaveFile } from "@/typeDefs";
 // Packages -------------------------------------------------------------------------
 import { format } from "date-fns";
+import Link from "next/link";
 // rQuery ---------------------------------------------------------------------------
-// Context --------------------------------------------------------------------------
 // Components -----------------------------------------------------------------------
 import Portal from "../Portal";
 import SavingGameIcon from "./SavingGameIcon";
@@ -37,13 +37,17 @@ export default function GameClient({ saveFile }: Readonly<{ saveFile?: SaveFile 
             </Portal>
 
             <Portal targetElementId="debuggerCommands" childElementId="gameClient_saveFile">
-                <Button 
-                    id="gameClient_saveFile"
-                    variant="outline"
-                    onClick={()=>console.log({ trace:"GameClient", saveFile })}
-                >
-                    Log Save File
-                </Button>
+                <div id="gameClient_saveFile">
+                    <Button 
+                        variant="outline"
+                        onClick={()=>console.log({ trace:"GameClient", saveFile })}
+                    >
+                        Log Save File
+                    </Button>
+                    <Button variant="outline" asChild>
+                        <Link href={`/play/${saveFile.id}/test`}>Go to test encounter</Link>
+                    </Button>
+                </div> 
             </Portal>
 
             <SavingGameIcon/>

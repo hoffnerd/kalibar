@@ -1,5 +1,5 @@
 import { CharacterSaveData } from "@/typeDefs";
-import { ENEMIES } from "../combat/enemies";
+import { ENEMIES, Enemy } from "./enemies";
 
 
 
@@ -14,7 +14,7 @@ export interface EncounterSettings {
 
 export interface Encounter {
     settings?: EncounterSettings;
-    enemies: Array<CharacterSaveData>;
+    enemies: Array<Enemy>;
 }
 
 
@@ -43,12 +43,12 @@ export const test: Encounter = {
         }
     },
     enemies: [
-        magicThug,
-        trickyThug,
-        fastThug,
-        smartThug,
-        strongThug,
-        hardyThug,
+        { ...magicThug, isHidden: true },
+        { ...trickyThug, isHidden: true },
+        { ...fastThug, isHidden: true },
+        { ...smartThug, isHidden: true },
+        { ...strongThug, isHidden: true },
+        { ...hardyThug, isHidden: true },
     ],
 }
 

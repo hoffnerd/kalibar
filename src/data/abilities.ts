@@ -71,6 +71,17 @@ const aggroManipulation: Skill = {
     calculationType: "round",
 }
 
+const initiative: Skill = {
+    key: "initiative",
+    short: "Init",
+    display: "Initiative",
+    abilityKey: "finesse",
+    base: 0,
+    perTotalLevel: 1,
+    perAbilityLevel: 2,
+    calculationType: "floor",
+}
+
 const accuracy: Skill = {
     key: "accuracy",
     short: "Acc",
@@ -181,6 +192,7 @@ const finesse: Ability = {
     short: "fin",
     display: "Finesse",
     skills: [
+        initiative,
         accuracy,
         evasion,
     ],
@@ -235,6 +247,7 @@ export const SKILLS = {
     aggroManipulation,
 
     // finesse
+    initiative,
     accuracy,
     evasion,
 
