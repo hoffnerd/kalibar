@@ -2,9 +2,11 @@
 import { type CharacterSaveData, type CombatEntity } from "@/typeDefs";
 import { type SkillKey, type AbilityKey, type AbilityLevels, type SkillOptional } from "@/data/abilities";
 import { type CombatStoreEntities, type FriendlyCharacterSaveData } from "@/stores/useCombatStore";
+import { EncounterSettings, type Encounter } from "@/data/combat/encounters";
 // Data -----------------------------------------------------------------------------
 import { ABILITY_POINTS_AT_LEVEL_0 } from "@/data/_config";
 import { ABILITIES, SKILLS} from "@/data/abilities";
+import { Enemy } from "@/data/combat/enemies";
 
 
 
@@ -22,9 +24,9 @@ export type CalculatedSkills = {
 
 
 //______________________________________________________________________________________
-// ===== Functions =====
+// ===== Level and Skill Functions =====
 
-const getTotalLevel = (abilityLevels:AbilityLevels, level?:number) => {
+export const getTotalLevel = (abilityLevels:AbilityLevels, level?:number) => {
     if(level && level > 0) return level;
     let totalLevel = 0 - ABILITY_POINTS_AT_LEVEL_0;
     (Object.keys(abilityLevels) as Array<AbilityKey>).forEach(abilityKey => {
@@ -87,33 +89,68 @@ const calculateSkills = (character:CharacterSaveData) => {
     return skills as CalculatedSkills;
 }
 
-// const randomizeEntities = (entities, options) => {
-//     const shownEntities = convertObjToArray({...entities}).filter(x => !x.isHidden)
-//     if(isArray(shownEntities, options.show, true)) return { ...entities };
 
-//     let newEntities = { ...entities }
-//     const hiddenEntities = convertObjToArray({...newEntities}).filter(x => x.isHidden)
-//     const hiddenEnemyIds = hiddenEntities.map(x => x.id);
-//     const numberOfHiddenEntities = hiddenEnemyIds.length;
-//     const randomIndex = Math.floor(Math.random() * numberOfHiddenEntities);
-    
-//     newEntities[ hiddenEnemyIds[randomIndex] ].isHidden = false;
-//     return randomizeEntities(newEntities, options)
-// }
 
-// const configureEnemyEntities = () => {
-//     if(encounterData?.settings?.randomize) return randomizeEntities(encounterData.enemies, encounterData.settings.randomize);
-//     return isObj(enemies) ? { ...enemies } : {};
-// }
+//______________________________________________________________________________________
+// ===== Entity Functions =====
 
-const configureFriendlyEntities = ( friendlies:FriendlyCharacterSaveData ) => {
+const createEnemyEntities = ( enemies:Array<Enemy> ) => {
+    let entities: CombatStoreEntities = {};
+    enemies && enemies.forEach(enemy => {
+        if(!enemy) return;
+        const skills = calculateSkills(enemy);
+        const enemyEntity: CombatEntity = { 
+            ...enemy,
+            skills,
+            hp: skills.maxHealth || 0,
+            isDead: false,
+            isUnconscious: false,
+            isHidden: enemy?.isHidden || false,
+        };
+        entities[enemy.key] = enemyEntity;
+    })
+    return entities;
+}
+
+const randomizeEntities = (settings:EncounterSettings, enemiesHidden:CombatStoreEntities, enemiesShown?:CombatStoreEntities) => {
+    const enemiesHiddenKeys = Object.keys(enemiesHidden || {});
+    const enemiesShownKeys = Object.keys(enemiesShown || {});
+    if(settings?.randomize?.show && settings.randomize.show <= enemiesShownKeys.length) return enemiesShown;
+
+    const randomIndex = Math.floor(Math.random() * enemiesHiddenKeys.length);
+    const randomEnemyHiddenKey = enemiesHiddenKeys?.[randomIndex] || "";
+    const randomEnemyEntity = enemiesHidden[randomEnemyHiddenKey] as CombatEntity;
+
+    let newEnemiesHidden = structuredClone(enemiesHidden);
+    delete newEnemiesHidden[randomEnemyHiddenKey];
+    let newEnemiesShown = structuredClone(enemiesShown || {});
+    newEnemiesShown[randomEnemyHiddenKey] = randomEnemyEntity;
+
+    return randomizeEntities(settings, newEnemiesHidden, newEnemiesShown);
+}
+
+export const configureEnemyEntities = ( encounter:Encounter ) => {
+    if(encounter?.settings?.randomize) {
+        return randomizeEntities(
+            encounter.settings, 
+            createEnemyEntities(encounter.enemies.filter(enemy => enemy.isHidden)), 
+            createEnemyEntities(encounter.enemies.filter(enemy => !enemy.isHidden))
+        );
+    }
+    return createEnemyEntities(encounter.enemies);
+}
+
+export const configureFriendlyEntities = ( friendlies:FriendlyCharacterSaveData ) => {
     let entities: CombatStoreEntities = {};
     friendlies && (Object.keys(friendlies) as Array<keyof FriendlyCharacterSaveData>).forEach(friendlyKey => {
         const friendly = friendlies[friendlyKey];
         if(!friendly) return;
+        const skills = calculateSkills(friendly);
         const friendlyEntity: CombatEntity = { 
             ...friendly,
-            skills: friendly && calculateSkills(friendly) || {},
+            skills,
+            hp: skills.maxHealth || 0,
+            aggro: 50,
             isDead: false,
             isUnconscious: false,
             isHidden: false,
@@ -121,4 +158,30 @@ const configureFriendlyEntities = ( friendlies:FriendlyCharacterSaveData ) => {
         entities[friendlyKey] = friendlyEntity;
     })
     return entities;
+}
+
+
+
+//______________________________________________________________________________________
+// ===== Initiative Functions =====
+
+const compareObjectsWithInitiative = (a:{ initiative:number }, b:{ initiative:number }) => {
+    const { initiative:aInitiative } = a;
+    const { initiative:bInitiative } = b;
+
+    if (aInitiative < bInitiative) return -1;
+    if (aInitiative > bInitiative) return 1;
+    return 0;
+}
+
+export const getInitiativeOrder = ( entities:CombatStoreEntities ) => {
+    let entityKeyWithInitiative: Array<{ key:string, initiative:number }> = [];
+    Object.keys(entities).forEach(entityKey => {
+        const entity = entities[entityKey];
+        if(!entity) return;
+        const initiative = Math.floor(Math.random() * 100) + (entity.skills.initiative as number);
+        entityKeyWithInitiative.push({ key:entityKey, initiative });
+    });
+    entityKeyWithInitiative.sort(compareObjectsWithInitiative);
+    return entityKeyWithInitiative.map(entityKeyInitiative => entityKeyInitiative.key);
 }
