@@ -11,13 +11,13 @@ export interface Maneuver {
     key: string;
     display: string;
     description?: string;
-    action: (maneuver: Maneuver, user: Character, target: Character) => void | any;
+    action: (maneuver?: Maneuver, user?: Character, target?: Character) => void | any;
     icon?: string;
 }
 
 
 //______________________________________________________________________________________
-// ===== Items =====
+// ===== Maneuvers =====
 
 const debugPhysicalAttack: Maneuver = {
     key: "debugPhysicalAttack",
