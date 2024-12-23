@@ -70,7 +70,7 @@ export interface SaveFile extends Omit<SaveFilePrisma, 'saveData'> {
 // ===== Characters =====
 
 export type CharacterSkill = {
-    [key in SkillKey]?: number;
+    [key in SkillKey]: number;
 }
 
 export type CharacterEquipmentKey = keyof CharacterEquipment;
