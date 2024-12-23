@@ -1,76 +1,38 @@
 
 
 // Types ----------------------------------------------------------------------------
+import { Maneuver } from "@/data/maneuvers";
 // Packages -------------------------------------------------------------------------
+import { useState } from "react";
 // Stores ---------------------------------------------------------------------------
 // Data -----------------------------------------------------------------------------
-// Styles ---------------------------------------------------------------------------
+import { ADDITIONAL_ACTIONS } from "@/data/combat/additionalActions";
 // ShadcnUI -------------------------------------------------------------------------
-import { useState } from "react";
-import { HorizontalLine } from "../microComponents";
 import { Button } from "../shadcn/ui/button";
 import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarTrigger } from "../shadcn/ui/menubar";
-import Portal from "../Portal";
 // Components -----------------------------------------------------------------------
+import Portal from "../Portal";
+import { HorizontalLine } from "../microComponents";
 // Other ----------------------------------------------------------------------------
-
-
-
-//______________________________________________________________________________________
-// ===== Types/Interfaces =====
-
-interface ActionItem {
-    key: string;
-    display?: string;
-    description?: string | JSX.Element;
-    onClick?: () => void;
-}
 
 
 //______________________________________________________________________________________
 // ===== True Constants =====
 
-const TEST_ACTIONS: Array<ActionItem> = [
+const TEST_ACTIONS: Array<Maneuver> = [
     {
         key: "test",
         display: "Test",
         description: "Test Description",
-        onClick: () => console.log("Test"),
+        action: () => console.log("Test"),
     },
 ]
 
-const ADDITIONAL_ACTIONS: Array<ActionItem> = [
-    {
-        key: "dodge",
-        display: "Dodge",
-        description: "Use your action to double your Evasion skill until the start of your next turn.",
-        onClick: () => console.log("Dodge"),
-    },
-    {
-        key: "hide",
-        display: "Hide",
-        description: "Use your action to make a Stealth skill check. On a success, your Aggro Rating (AR) will be 0%.",
-        onClick: () => console.log("Hide"),
-    },
-    {
-        key: "search",
-        display: "Search",
-        description: "Use your action to look for any additional loot you can pick up.",
-        onClick: () => console.log("Search"),
-    },
-    {
-        key: "swapEquipment",
-        display: "Swap Equipment",
-        description: "Use your action to swap your equipment for other pieces of equipment from your inventory.",
-        onClick: () => console.log("Swap  Equipment"),
-    },
-    { key: "horizontalLine" },
-    {
-        key: "endTurn",
-        display: "End Turn",
-        description: "Don't do anything for your turn.",
-        onClick: () => console.log("End Turn"),
-    },
+const ADDITIONAL_ACTIONS_ARRAY: Array<Maneuver> = [
+    ADDITIONAL_ACTIONS.dodge,
+    ADDITIONAL_ACTIONS.hide,
+    ADDITIONAL_ACTIONS.search,
+    ADDITIONAL_ACTIONS.swapEquipment,
 ];
 
 
@@ -82,12 +44,12 @@ function ActionItem({
     children,
     className,
     title,
-    onClick,
+    action,
 }: Readonly<{
     children?: React.ReactNode;
     className?: string;
     title: string;
-    onClick: () => void;
+    action: Maneuver["action"];
 }>){
     return (
         <MenubarItem 
@@ -96,7 +58,7 @@ function ActionItem({
                 hover:neBorder focus:neBorder hover:neBorderGlow focus:neBorderGlow 
                 ${className}
             `}
-            onClick={onClick}
+            onClick={() => action()}
         >
             <div>{title}</div>
             <div className="text-xs text-slate-400 ">{children}</div>
@@ -123,8 +85,8 @@ function ActionBarTrigger({ children, className }: Readonly<{ children?: React.R
 }
 
 function ActionBar(){
-    const handleOnClick = (key: string, onClick?: () => void) => {
-        if(onClick) onClick();
+    const handleOnClick = (key: string, action?: Maneuver["action"]) => {
+        if(action) action();
         switch(key){
             // case "":
             //     break;
@@ -138,28 +100,32 @@ function ActionBar(){
             <MenubarMenu>
                 <ActionBarTrigger className="neColorOrange">Maneuvers</ActionBarTrigger>
                 <ActionBarContent className="neColorOrange">
-                    {TEST_ACTIONS.map(({ key, display, description, onClick }) => key === "horizontalLine" 
-                        ? <HorizontalLine key={key} className="py-2"/>
-                        : <ActionItem key={key} title={display || key} onClick={() => handleOnClick(key, onClick)}>{description}</ActionItem>
-                    )}
+                    {TEST_ACTIONS.map(({ key, display, description, action }) => (
+                        <ActionItem key={key} title={display || key} action={() => handleOnClick(key, action)}>{description}</ActionItem>
+                    ))}
                 </ActionBarContent>
             </MenubarMenu>
             <MenubarMenu>
                 <ActionBarTrigger className="neColorGreen">Items</ActionBarTrigger>
                 <ActionBarContent className="neColorGreen">
-                    {TEST_ACTIONS.map(({ key, display, description, onClick }) => key === "horizontalLine" 
-                        ? <HorizontalLine key={key} className="py-2"/>
-                        : <ActionItem key={key} title={display || key} onClick={() => handleOnClick(key, onClick)}>{description}</ActionItem>
-                    )}
+                    {TEST_ACTIONS.map(({ key, display, description, action }) => (
+                        <ActionItem key={key} title={display || key} action={() => handleOnClick(key, action)}>{description}</ActionItem>
+                    ))}
                 </ActionBarContent>
             </MenubarMenu>
             <MenubarMenu>
                 <ActionBarTrigger className="neColorBlue">Additional Actions</ActionBarTrigger>
                 <ActionBarContent className="neColorBlue">
-                    {ADDITIONAL_ACTIONS.map(({ key, display, description, onClick }) => key === "horizontalLine" 
-                        ? <HorizontalLine key={key} className="py-2"/>
-                        : <ActionItem key={key} title={display || key} onClick={() => handleOnClick(key, onClick)}>{description}</ActionItem>
-                    )}
+                    {ADDITIONAL_ACTIONS_ARRAY.map(({ key, display, description, action }) => (
+                        <ActionItem key={key} title={display || key} action={() => handleOnClick(key, action)}>{description}</ActionItem>
+                    ))}
+                    <HorizontalLine className="py-2"/>
+                    <ActionItem 
+                        title={ADDITIONAL_ACTIONS.endTurn?.display}
+                        action={() => handleOnClick(ADDITIONAL_ACTIONS.endTurn.key, ADDITIONAL_ACTIONS.endTurn.action)}
+                    >
+                        {ADDITIONAL_ACTIONS.endTurn.description}
+                    </ActionItem>
                 </ActionBarContent>
             </MenubarMenu>
         </Menubar>
