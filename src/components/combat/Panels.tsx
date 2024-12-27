@@ -12,7 +12,7 @@ import { useMobilePanelsStore } from "@/stores/useMobilePanelsStore";
 // Components -----------------------------------------------------------------------
 import MobileNavButton from "../MobileNavButton";
 import Initiative from "./Initiative";
-import Actions from "./Actions";
+import Actions from "./actions/Actions";
 import Battlefield from "./Battlefield";
 // Other ----------------------------------------------------------------------------
 
@@ -31,7 +31,7 @@ const BORDER = "border-4 rounded-3xl neonEffect neBorder neBorderGlow neColorPur
 export default function Panels({ saveFile }: Readonly<{ saveFile?: SaveFile }>){
 
     //______________________________________________________________________________________
-    // ===== Stores =====
+    // ===== Store State =====
     const activeCombatPanel = useMobilePanelsStore((state) => state.activeCombatPanel);
 
     //______________________________________________________________________________________
