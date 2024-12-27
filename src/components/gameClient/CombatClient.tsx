@@ -34,10 +34,8 @@ export default function CombatClient({ saveFile, encounterKey }: Readonly<{ save
 
             <Portal targetElementId="debuggerContent" childElementId="combatClient_saveFile.updatedAt">
                 <ul id="combatClient_saveFile.updatedAt" className="list-disc ml-5">
-                    <li>
-                        <strong>saveFile.updatedAt: </strong>
-                        {format(new Date (saveFile.updatedAt), "P p")}
-                    </li>
+                    <li><strong>saveFile.updatedAt: </strong> {format(new Date (saveFile.updatedAt), "P p")}</li>
+                    <li><strong>activePhase: </strong> {combatStore?.activePhase}</li>
                 </ul>
             </Portal>
 

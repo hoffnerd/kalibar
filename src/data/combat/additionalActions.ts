@@ -19,6 +19,8 @@ const dodge: Maneuver = {
     action: (maneuver, user, target) => {
         console.log("dodge", {maneuver, user, target});
     },
+    targetType: "ally",
+    targetAmount: "self",
 }
 
 const hide: Maneuver = {
@@ -28,6 +30,8 @@ const hide: Maneuver = {
     action: (maneuver, user, target) => {
         console.log("hide", {maneuver, user, target});
     },
+    targetType: "ally",
+    targetAmount: "self",
 }
 
 const search: Maneuver = {
@@ -46,6 +50,8 @@ const swapEquipment: Maneuver = {
     action: (maneuver, user, target) => {
         console.log("swapEquipment", {maneuver, user, target});
     },
+    targetType: "ally",
+    targetAmount: "self",
 }
 
 const endTurn: Maneuver = {

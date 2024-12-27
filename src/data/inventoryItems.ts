@@ -20,6 +20,8 @@ export interface InventoryItem {
     equippable?: boolean;
     equipLocation?: Array<CharacterEquipmentKey>;
     maneuvers?: Array<ManeuverKey>;
+    targetType?: "ally" | "opponent";
+    targetAmount?: "self" | "individual" | "all";
 }
 
 
@@ -51,6 +53,8 @@ const potionHealthLevel1: InventoryItem = {
     display: "Potion of Health (Level 1)",
     description: "A potion that restores 10 health points (plus Medicine Skill).",
     type: "consumable",
+    targetType: "ally",
+    targetAmount: "individual",
 }
 
 

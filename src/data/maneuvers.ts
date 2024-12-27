@@ -13,6 +13,8 @@ export interface Maneuver {
     description?: string;
     action: (maneuver?: Maneuver, user?: Character, target?: Character) => void | any;
     icon?: string;
+    targetType?: "ally" | "opponent";
+    targetAmount?: "self" | "individual" | "all";
 }
 
 
@@ -26,6 +28,8 @@ const debugPhysicalAttack: Maneuver = {
     action: (maneuver, user, target) => {
         console.log("DEBUG: Physical Attack", {maneuver, user, target});
     },
+    targetType: "opponent",
+    targetAmount: "individual",
 }
 
 const debugMagicalAttack: Maneuver = {
@@ -35,6 +39,8 @@ const debugMagicalAttack: Maneuver = {
     action: (maneuver, user, target) => {
         console.log("DEBUG: Magical Attack", {maneuver, user, target});
     },
+    targetType: "opponent",
+    targetAmount: "all",
 }
 
 

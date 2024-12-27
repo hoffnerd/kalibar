@@ -34,7 +34,7 @@ type EnemyEntities = {
 
 export type CombatStoreEntities = FriendlyEntities & EnemyEntities
 
-interface CombatStoreActionSelected { 
+export interface CombatStoreActionSelected { 
     maneuverKey?: ManeuverKey, 
     inventoryItemKey?: InventoryItemKey, 
     additionalActionKey?: AdditionalActionKey 
@@ -43,6 +43,7 @@ interface CombatStoreActionSelected {
 type StoreKeys = keyof CombatStoreState;
 
 export interface CombatStoreState {
+    activePhase: "initializeCombat" | "buffEffects" | "actionSelect" | "entitySelect" | "executeAction" | "nerfEffects" | "handleConditions" | "nextTurn";
     entities: CombatStoreEntities;
     initiativeOrder: Array<string>;
     startingEntityKey?: string | null;
@@ -62,7 +63,9 @@ interface CombatStoreFunctions {
 
     buffEffectsPhase: () => void;
     actionSelectPhase: (actionSelected: CombatStoreActionSelected) => void;
+    clearActionSelected: () => void;
     entitySelectPhase: (entitySelected: keyof CombatStoreEntities) => void;
+    clearEntitySelected: () => void;
     executeActionPhase: () => void;
     nerfEffectsPhase: () => void;
     handleConditionsPhase: () => void;
@@ -75,6 +78,7 @@ interface CombatStoreFunctions {
 // ===== True Constants =====
 
 const DEFAULT_STORE: CombatStoreState = {
+    activePhase: "initializeCombat",
     entities: {},
     initiativeOrder: [],
     startingEntityKey: null,
@@ -91,7 +95,7 @@ const DEFAULT_STORE: CombatStoreState = {
 //______________________________________________________________________________________
 // ===== Functions =====
 
-const getAction = (actionSelected: CombatStoreActionSelected) => {
+export const getAction = (actionSelected: CombatStoreActionSelected) => {
     if(actionSelected.maneuverKey) return MANEUVERS[actionSelected.maneuverKey];
     if(actionSelected.inventoryItemKey) return INVENTORY_ITEMS[actionSelected.inventoryItemKey];
     if(actionSelected.additionalActionKey) return ADDITIONAL_ACTIONS[actionSelected.additionalActionKey];
@@ -112,7 +116,12 @@ export const useCombatStore = create<CombatStoreState & CombatStoreFunctions>()(
     initializeCombat: (friendlies, encounter) => {
         const entities = structuredClone({ ...configureFriendlyEntities(friendlies), ...configureEnemyEntities(encounter) });
         const initiativeOrder = getInitiativeOrder(entities);
-        set(() => ({ entities, initiativeOrder, startingEntityKey: initiativeOrder[0] }));
+        set(() => ({
+            activePhase: "buffEffects",
+            entities, 
+            initiativeOrder, 
+            startingEntityKey: initiativeOrder[0] 
+        }));
     }, 
 
     buffEffectsPhase: () => set((state) => {
@@ -127,14 +136,17 @@ export const useCombatStore = create<CombatStoreState & CombatStoreFunctions>()(
         // Other Buffs...
 
         // Apply changes
-        return { 
+        return {
+            activePhase: "actionSelect",
             entities: { ...state.entities, [entityKey]: { ...entity } } 
         }
     }),
     
-    actionSelectPhase: (actionSelected) => set(()=>({ actionSelected })),
+    actionSelectPhase: (actionSelected) => set(()=>({ activePhase: "entitySelect", actionSelected })),
+    clearActionSelected: () => set(()=>({ activePhase: "actionSelect", actionSelected:null })),
 
-    entitySelectPhase: (entitySelected) => set(()=>({ entitySelected })),
+    entitySelectPhase: (entitySelected) => set(()=>({ activePhase: "executeAction", entitySelected })),
+    clearEntitySelected: () => set(()=>({ activePhase: "entitySelect", entitySelected:null })),
 
     executeActionPhase: () => set((state) => {
         if(!state?.initiativeOrder?.[0]) return state;
@@ -147,6 +159,7 @@ export const useCombatStore = create<CombatStoreState & CombatStoreFunctions>()(
         // TODO: have `userEntity` and `action` effect the `targetEntity`
 
         return {
+            activePhase: "nerfEffects",
             entities: { 
                 ...state.entities, 
                 [state.initiativeOrder[0]]: userEntity,
@@ -166,6 +179,7 @@ export const useCombatStore = create<CombatStoreState & CombatStoreFunctions>()(
 
         // Apply changes6
         return { 
+            activePhase: "handleConditions",
             entities: { ...state.entities, [entityKey]: { ...entity } } 
         }
     }),
@@ -175,13 +189,13 @@ export const useCombatStore = create<CombatStoreState & CombatStoreFunctions>()(
 
         // TODO: Handle conditions
 
-        return { entities }
+        return { activePhase: "nextTurn", entities }
     }),
 
     nextTurn: () => set((state) => {
         let initiativeOrder = structuredClone(state.initiativeOrder);
         const turnTakerEntityKey = initiativeOrder.shift() as string;
         initiativeOrder.push(turnTakerEntityKey);
-        return { initiativeOrder }
+        return {  activePhase: "buffEffects", initiativeOrder }
     }),
 }))
