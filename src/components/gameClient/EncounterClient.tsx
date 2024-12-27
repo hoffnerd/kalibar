@@ -38,6 +38,7 @@ export default function EncounterClient({ saveFile, encounterKey }: Readonly<{ s
 
     //______________________________________________________________________________________
     // ===== Store State =====
+    const activePhase = useCombatStore(state => state.activePhase);
     const entities = useCombatStore(state => state.entities);
 
 
@@ -45,6 +46,12 @@ export default function EncounterClient({ saveFile, encounterKey }: Readonly<{ s
     //______________________________________________________________________________________
     // ===== Store Functions =====
     const initializeCombat = useCombatStore(state => state.initializeCombat);
+    const buffEffectsPhase = useCombatStore(state => state.buffEffectsPhase);
+    const executeActionPhase = useCombatStore(state => state.executeActionPhase);
+    const nerfEffectsPhase = useCombatStore(state => state.nerfEffectsPhase);
+    const handleConditionsPhase = useCombatStore(state => state.handleConditionsPhase);
+    const nextTurn = useCombatStore(state => state.nextTurn);
+
 
 
 
@@ -52,10 +59,30 @@ export default function EncounterClient({ saveFile, encounterKey }: Readonly<{ s
     // ===== Use Effects =====
 
     useEffect(() => {
+        switch(activePhase){
+            case "buffEffects":
+                buffEffectsPhase();
+                break;
+            case "executeAction":
+                executeActionPhase();
+                break;
+            case "nerfEffects":
+                nerfEffectsPhase();
+                break;
+            case "handleConditions":
+                handleConditionsPhase();
+                break;
+            case "nextTurn":
+                nextTurn();
+                break;
+        }
+    }, [activePhase])
+
+    useEffect(() => {
         if(Object.keys(entities).length > 0) return;
         initializeCombat(friendlies, encounter);
     }, [entities])
-    
+
 
 
     //______________________________________________________________________________________
