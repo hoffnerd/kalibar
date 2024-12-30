@@ -11,7 +11,7 @@ import { useMobilePanelsStore } from "@/stores/useMobilePanelsStore";
 // ShadcnUI -------------------------------------------------------------------------
 // Components -----------------------------------------------------------------------
 import MobileNavButton from "../MobileNavButton";
-import Initiative from "./Initiative";
+import Initiative from "./initiative/Initiative";
 import Actions from "./actions/Actions";
 import Battlefield from "./Battlefield";
 // Other ----------------------------------------------------------------------------

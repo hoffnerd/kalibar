@@ -13,7 +13,8 @@ import { create } from 'zustand'
 // Components -----------------------------------------------------------------------
 // Data -----------------------------------------------------------------------------
 // Other ----------------------------------------------------------------------------
-import { configureEnemyEntities, configureFriendlyEntities, getInitiativeOrder } from '@/utils/combat';
+import { calculateSkill, configureEnemyEntities, configureFriendlyEntities, getInitiativeOrder, getTotalLevel } from '@/utils/combat';
+import { SKILLS } from '@/data/abilities';
 
 
 
@@ -49,7 +50,6 @@ export interface CombatStoreState {
     startingEntityKey?: string | null;
     roundCount: number;
     turnCount: number;
-    backgroundTurnCount: number;
     narrative: Array<any>;
     actionSelected: CombatStoreActionSelected | null;
     entitySelected: keyof CombatStoreEntities | null;
@@ -58,6 +58,8 @@ export interface CombatStoreState {
 interface CombatStoreFunctions {
     resetStore: () => void;
     setStoreKeyValuePair: ( key:StoreKeys, value:any ) => void;
+    incrementRoundCount: () => void;
+    incrementTurnCount: () => void;
 
     initializeCombat: ( friendlies:FriendlyCharacterSaveData, encounter:Encounter ) => void;
 
@@ -84,7 +86,6 @@ const DEFAULT_STORE: CombatStoreState = {
     startingEntityKey: null,
     roundCount: 0,
     turnCount: 0,
-    backgroundTurnCount: 0,
     narrative: [],
     actionSelected: null,
     entitySelected: null,
@@ -102,6 +103,28 @@ export const getAction = (actionSelected: CombatStoreActionSelected) => {
     return null;
 }
 
+export const getActionAndType = (actionSelected: CombatStoreActionSelected) => {
+    if(actionSelected.maneuverKey) return { action: MANEUVERS[actionSelected.maneuverKey], type: "maneuver" };
+    if(actionSelected.inventoryItemKey) return { action: INVENTORY_ITEMS[actionSelected.inventoryItemKey], type: "inventoryItem" };
+    if(actionSelected.additionalActionKey) return { action: ADDITIONAL_ACTIONS[actionSelected.additionalActionKey], type: "additionalAction" };
+    return { action: null, type: null };
+}
+
+const handleNextTurn = ( initiativeOrder:Array<string>, entities:CombatStoreEntities, depth:number = 0 ) => {
+    if(depth > 100) return initiativeOrder;
+    if(!initiativeOrder?.[0]) return initiativeOrder;
+    let initiativeOrderCloned = structuredClone(initiativeOrder);
+    const turnTakerEntityKey = initiativeOrderCloned.shift() as string;
+    initiativeOrderCloned.push(turnTakerEntityKey);
+    
+    let newTurnTakerEntityKey = initiativeOrderCloned[0];
+    const newTurnTakerEntity = newTurnTakerEntityKey && entities[newTurnTakerEntityKey];
+    if(newTurnTakerEntity && (newTurnTakerEntity?.isDead || newTurnTakerEntity?.isUnconscious || newTurnTakerEntity?.isHidden)){
+        return handleNextTurn(initiativeOrderCloned, entities, depth + 1);
+    }
+    return initiativeOrderCloned;
+}
+
 
 
 //______________________________________________________________________________________
@@ -112,6 +135,8 @@ export const useCombatStore = create<CombatStoreState & CombatStoreFunctions>()(
 
     resetStore: () => set(() => DEFAULT_STORE), 
     setStoreKeyValuePair: (key, value) => set(() => ({ [key]:value })),
+    incrementRoundCount: () => set((state) => ({ roundCount: state.roundCount + 1 })),
+    incrementTurnCount: () => set((state) => ({ turnCount: state.turnCount + 1 })),
 
     initializeCombat: (friendlies, encounter) => {
         const entities = structuredClone({ ...configureFriendlyEntities(friendlies), ...configureEnemyEntities(encounter) });
@@ -152,17 +177,40 @@ export const useCombatStore = create<CombatStoreState & CombatStoreFunctions>()(
         if(!state?.initiativeOrder?.[0]) return state;
         if(!state.actionSelected) return state;
         if(!state.entitySelected) return state;
-        const action = getAction(state.actionSelected);
-        let userEntity = structuredClone(state.entities[state.initiativeOrder[0]]) as CombatEntity;
+        const { action, type } = getActionAndType(state.actionSelected);
+        const skill = action?.skill && SKILLS[action.skill];
+        let turnTakerEntity = structuredClone(state.entities[state.initiativeOrder[0]]) as CombatEntity;
         let targetEntity = structuredClone(state.entities[state.entitySelected]) as CombatEntity;
+
+        const actionValue = !skill ? 0 : calculateSkill({ 
+            totalLevel: getTotalLevel(turnTakerEntity.abilities), 
+            abilityLevel: turnTakerEntity.abilities[skill.abilityKey],
+            base: action?.base || skill.base,
+            perTotalLevel: action?.perAbilityLevel || skill.perTotalLevel,
+            perAbilityLevel: action?.perAbilityLevel || skill.perAbilityLevel,
+            max: action?.max || skill.max,
+            calculationType: action?.calculationType || skill.calculationType,
+            // multiplierPercent: Handle Equipment or Talent or other additional multiplierPercents,
+        });
+
+        if(action?.targetMath === "add") targetEntity.hp += actionValue;
+        if(action?.targetMath === "subtract") targetEntity.hp -= actionValue;
+
         
-        // TODO: have `userEntity` and `action` effect the `targetEntity`
+        // TODO: any "thorns" effects?
+
+        if(targetEntity.hp > targetEntity.skills.maxHealth) targetEntity.hp = targetEntity.skills.maxHealth;
+        if(targetEntity.hp <= 0){
+            targetEntity.hp = 0;
+            if(targetEntity.relation === "enemy") targetEntity.isDead = true;
+            if(targetEntity.relation === "friendly") targetEntity.isUnconscious = true;
+        }
 
         return {
             activePhase: "nerfEffects",
             entities: { 
                 ...state.entities, 
-                [state.initiativeOrder[0]]: userEntity,
+                [state.initiativeOrder[0]]: turnTakerEntity,
                 [state.entitySelected]: targetEntity,
             },
             actionSelected: null,
@@ -177,7 +225,7 @@ export const useCombatStore = create<CombatStoreState & CombatStoreFunctions>()(
 
         // TODO Nerfs...
 
-        // Apply changes6
+        // Apply changes
         return { 
             activePhase: "handleConditions",
             entities: { ...state.entities, [entityKey]: { ...entity } } 
@@ -193,9 +241,7 @@ export const useCombatStore = create<CombatStoreState & CombatStoreFunctions>()(
     }),
 
     nextTurn: () => set((state) => {
-        let initiativeOrder = structuredClone(state.initiativeOrder);
-        const turnTakerEntityKey = initiativeOrder.shift() as string;
-        initiativeOrder.push(turnTakerEntityKey);
+        const initiativeOrder = handleNextTurn(state.initiativeOrder, state.entities);
         return {  activePhase: "buffEffects", initiativeOrder }
     }),
 }))
