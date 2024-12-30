@@ -1,7 +1,7 @@
 "use client"
 
 // Types ----------------------------------------------------------------------------
-import { type SaveFile, type SaveData } from "@/typeDefs";
+import { type SaveFile, type SaveData, type CombatEntity } from "@/typeDefs";
 import { type FriendlyCharacterSaveData } from "@/stores/useCombatStore";
 // Packages -------------------------------------------------------------------------
 import { useEffect } from "react";
@@ -40,6 +40,8 @@ export default function EncounterClient({ saveFile, encounterKey }: Readonly<{ s
     // ===== Store State =====
     const activePhase = useCombatStore(state => state.activePhase);
     const entities = useCombatStore(state => state.entities);
+    const initiativeOrder = useCombatStore(state => state.initiativeOrder);
+    const startingEntityKey = useCombatStore(state => state.startingEntityKey);
 
 
 
@@ -51,6 +53,8 @@ export default function EncounterClient({ saveFile, encounterKey }: Readonly<{ s
     const nerfEffectsPhase = useCombatStore(state => state.nerfEffectsPhase);
     const handleConditionsPhase = useCombatStore(state => state.handleConditionsPhase);
     const nextTurn = useCombatStore(state => state.nextTurn);
+    const incrementRoundCount = useCombatStore(state => state.incrementRoundCount);
+    const incrementTurnCount = useCombatStore(state => state.incrementTurnCount);
 
 
 
@@ -82,6 +86,16 @@ export default function EncounterClient({ saveFile, encounterKey }: Readonly<{ s
         if(Object.keys(entities).length > 0) return;
         initializeCombat(friendlies, encounter);
     }, [entities])
+
+    useEffect(() => {
+        if(!startingEntityKey) return;
+        if(initiativeOrder[0] === startingEntityKey) incrementRoundCount();
+        const turnTakerEntityKey = initiativeOrder[0];
+        const turnTakerEntity = turnTakerEntityKey && entities[turnTakerEntityKey] as CombatEntity;
+        if(!(turnTakerEntity && (turnTakerEntity?.isDead || turnTakerEntity?.isUnconscious || turnTakerEntity?.isHidden))){
+            incrementTurnCount();
+        }
+    }, [startingEntityKey, initiativeOrder])
 
 
 

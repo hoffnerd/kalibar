@@ -22,6 +22,20 @@ export type CalculatedSkills = {
 };
 
 
+const DEFAULT_SKILLS = {
+    magicAttack: 0,
+    magicDefense: 0,
+    aggroManipulation: 0,
+    initiative: 0,
+    accuracy: 0,
+    evasion: 0,
+    medicine: 0,
+    physicalAttack: 0,
+    physicalDefense: 0,
+    maxHealth: 0,
+    regenHealth: 0,
+}
+
 
 //______________________________________________________________________________________
 // ===== Level and Skill Functions =====
@@ -36,7 +50,7 @@ export const getTotalLevel = (abilityLevels:AbilityLevels, level?:number) => {
     return Math.floor(totalLevel > 0 ? totalLevel : 0);
 }
 
-const calculateSkill = ({
+export const calculateSkill = ({
     totalLevel = 0,
     abilityLevel = 0,
     base = 0,
@@ -86,7 +100,7 @@ const calculateSkills = (character:CharacterSaveData) => {
             // multiplierPercent: Handle Equipment or Talent or other additional multiplierPercents,
         });
     });
-    return skills as CalculatedSkills;
+    return { ...DEFAULT_SKILLS, ...skills };
 }
 
 
@@ -131,11 +145,19 @@ const randomizeEntities = (settings:EncounterSettings, enemiesHidden:CombatStore
 
 export const configureEnemyEntities = ( encounter:Encounter ) => {
     if(encounter?.settings?.randomize) {
-        return randomizeEntities(
+        const randomEntities = randomizeEntities( 
             encounter.settings, 
             createEnemyEntities(encounter.enemies.filter(enemy => enemy.isHidden)), 
             createEnemyEntities(encounter.enemies.filter(enemy => !enemy.isHidden))
         );
+        let entities = {};
+        randomEntities && (Object.keys(randomEntities) as Array<keyof CombatStoreEntities>).forEach(entityKey => {
+            const entity = randomEntities[entityKey];
+            if(!entity) return;
+            // @ts-ignore
+            entities[entityKey] = { ...entity, isHidden: false };
+        });
+        return entities as CombatStoreEntities;
     }
     return createEnemyEntities(encounter.enemies);
 }

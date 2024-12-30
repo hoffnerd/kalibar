@@ -1,6 +1,7 @@
 // Types ----------------------------------------------------------------------------
 // Packages -------------------------------------------------------------------------
 import { Terminal } from "lucide-react";
+import { motion } from "motion/react"
 // Data -----------------------------------------------------------------------------
 // Styles ---------------------------------------------------------------------------
 // ShadcnUI -------------------------------------------------------------------------
@@ -64,13 +65,14 @@ export function ReadableTime({ timeInSeconds }: Readonly<{ timeInSeconds: number
  * Renders a horizontal line with a specified className and lineClassName.
  */
 export function HorizontalLine({ className, lineClassName }: Readonly<{ className?: string, lineClassName?: string }>){
-
-    //______________________________________________________________________________________
-    // ===== Component Return =====
-
     return (
         <div className={`px-3 ${className}`}>
             <div className={`border-2 rounded-3xl neonEffect neBorder neBorderGlow neColorWhite ${lineClassName}`}/>
         </div>
     )
+}
+
+
+export function MotionDiv({children, className}:Readonly<{ children?:React.ReactNode, className?:string }>){
+    return <motion.div layout transition={{ ease: "linear", stiffness: 100 }} className={className}>{children}</motion.div>
 }
