@@ -6,6 +6,16 @@
 //______________________________________________________________________________________
 // ===== Types & Interfaces =====
 
+export interface SkillCalculation {
+    skill?: SkillKey;
+    base?: number;
+    perTotalLevel?: number;
+    perAbilityLevel?: number;
+    max?: number;
+    calculationType?: "round" | "floor" | "raw";
+    multiplierPercent?: number;
+}
+
 export interface Skill {
     key: SkillKey;
     short: string;

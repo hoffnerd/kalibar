@@ -74,7 +74,7 @@ const dante = createCharacter({
         vitality: 1,
     },
     equipment: {
-        rightHand: "debugPhysicalWeapon",
+        rightHand: "razor",
     },
 })
 

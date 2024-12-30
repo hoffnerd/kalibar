@@ -39,7 +39,7 @@ const {
 export const test: Encounter = {
     settings: {
         randomize:  {
-            show: 3
+            show: 2
         }
     },
     enemies: [

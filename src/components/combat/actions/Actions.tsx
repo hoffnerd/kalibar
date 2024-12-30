@@ -43,7 +43,6 @@ export default function Actions(){
     const activePhase = useCombatStore(state => state.activePhase);
     const actionSelected = useCombatStore(state => state.actionSelected);
     const actionObj = actionSelected && getAction(actionSelected);
-    console.log({ activePhase, actionSelected, actionObj });
 
 
     //______________________________________________________________________________________
